@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finder Hotel - Gestión de Mantenimiento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/mantenimientos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo">
+                <h3>Finder Hotel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="nav-item"><a href="habitaciones.html"><i class="fas fa-bed"></i> Habitaciones</a></li>
+                    <li class="nav-item"><a href="reservas.html"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+                    <li class="nav-item"><a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a></li>
+                    <li class="nav-item"><a href="clientes.html"><i class="fas fa-user-friends"></i> Clientes</a></li>
+                    <li class="nav-item"><a href="checkin-checkout.html"><i class="fas fa-exchange-alt"></i>
+                            Check-in/Check-out</a></li>
+                    <li class="nav-item active"><a href="mantenimientos.html"><i class="fas fa-tools"></i>
+                            Mantenimiento</a></li>
+                    <li class="nav-item"><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
+                <div class="sidebar-user-profile">
+                    <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar">
+                    <div class="sidebar-user-details">
+                        <span class="sidebar-user-name">Adriana Montoya</span>
+                        <span class="sidebar-user-email">adriana@finder.com</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <main class="content">
+            <header class="top-header">
+                <div class="company-name">Finder Hotel</div>
+                <div class="user-profile-header">
+                    <img src="assets/images/user-avatar.jpg" alt="User Avatar">
+                    <span>Adriana Montoya</span>
+                </div>
+            </header>
+            <div class="page-content-wrapper">
+                <div class="page-main-header">
+                    <h2>Gestión de Mantenimiento</h2>
+                    <button class="back-button"><i class="fas fa-plus-circle"></i> Nueva Solicitud</button>
+                </div>
+
+                <section class="section-card">
+                    <h3>Tareas Pendientes</h3>
+                    <div class="table-actions">
+                        <input type="text" placeholder="Buscar por habitación o tipo de tarea..." class="search-input">
+                        <select class="filter-select">
+                            <option value="">Todas las Prioridades</option>
+                            <option value="alta">Alta</option>
+                            <option value="media">Media</option>
+                            <option value="baja">Baja</option>
+                        </select>
+                        <button class="btn-export"><i class="fas fa-sync"></i> Actualizar</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID Tarea</th>
+                                <th>Habitación</th>
+                                <th>Descripción</th>
+                                <th>Prioridad</th>
+                                <th>Asignado a</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#T001</td>
+                                <td>101</td>
+                                <td>Fuga en lavabo</td>
+                                <td><span class="priority-badge high">Alta</span></td>
+                                <td class="user-info"><img src="img/Soto.png" alt="Staff"
+                                        class="user-avatar-small"> Roberto Soto</td>
+                                <td>22/07/2025</td>
+                                <td>
+                                    <button class="btn-action primary"><i class="fas fa-check"></i> Completar</button>
+                                    <button class="btn-action edit"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#T002</td>
+                                <td>205</td>
+                                <td>Cambio de bombilla</td>
+                                <td><span class="priority-badge low">Baja</span></td>
+                                <td class="user-info"><img src="img/Soto.png" alt="Staff"
+                                        class="user-avatar-small"> Roberto Soto</td>
+                                <td>21/07/2025</td>
+                                <td>
+                                    <button class="btn-action primary"><i class="fas fa-check"></i> Completar</button>
+                                    <button class="btn-action edit"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#T003</td>
+                                <td>310</td>
+                                <td>Aire acondicionado ruidoso</td>
+                                <td><span class="priority-badge medium">Media</span></td>
+                                <td class="user-info"><img src="img/Soto.png" alt="Staff"
+                                        class="user-avatar-small"> Roberto Soto</td>
+                                <td>20/07/2025</td>
+                                <td>
+                                    <button class="btn-action primary"><i class="fas fa-check"></i> Completar</button>
+                                    <button class="btn-action edit"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="section-card">
+                    <h3>Historial de Mantenimiento</h3>
+                    <div class="table-actions">
+                        <input type="text" placeholder="Buscar en historial..." class="search-input">
+                        <input type="date" class="date-filter">
+                        <button class="btn-export"><i class="fas fa-download"></i> Exportar Historial</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID Tarea</th>
+                                <th>Habitación</th>
+                                <th>Descripción</th>
+                                <th>Fecha Completado</th>
+                                <th>Realizado por</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#T000</td>
+                                <td>102</td>
+                                <td>Reparación de TV</td>
+                                <td>19/07/2025</td>
+                                <td class="user-info"><img src="img/Soto.png" alt="Staff"
+                                        class="user-avatar-small"> Roberto Soto</td>
+                            </tr>
+                            <tr>
+                                <td>#T000</td>
+                                <td>401</td>
+                                <td>Pintura de pared</td>
+                                <td>15/07/2025</td>
+                                <td class="user-info"><img src="img/Soto.png" alt="Staff"
+                                        class="user-avatar-small"> Roberto Soto</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Nueva Solicitud -->
+<div id="modalNueva" class="modal">
+  <div class="modal-backdrop" data-close></div>
+
+  <div class="modal-card">
+    <div class="modal-head">
+      <h4>Nueva Solicitud</h4>
+      <button class="modal-close" title="Cerrar" data-close>&times;</button>
+    </div>
+
+    <form id="formNueva">
+      <div class="modal-body">
+        <div class="grid">
+          <label>
+            ID Tarea
+            <input id="inpId" type="text" placeholder="#T004" required />
+          </label>
+
+          <label>
+            Habitación
+            <input id="inpHabitacion" type="number" min="1" placeholder="101" required />
+          </label>
+        </div>
+
+        <label>
+          Descripción
+          <textarea id="inpDescripcion" rows="3" placeholder="Describe el problema" required></textarea>
+        </label>
+
+        <div class="grid">
+          <label>
+            Prioridad
+            <select id="inpPrioridad" required>
+              <option>Alta</option>
+              <option selected>Media</option>
+              <option>Baja</option>
+            </select>
+          </label>
+
+          <label>
+            Asignado a
+            <input id="inpAsignado" type="text" placeholder="Roberto Soto" value="Roberto Soto" required />
+          </label>
+        </div>
+
+        <label>
+          Fecha
+          <input id="inpFecha" type="text" readonly />
+        </label>
+      </div>
+
+      <div class="modal-foot">
+        <button type="button" class="btn ghost" data-close>Cancelar</button>
+        <button type="submit" class="btn primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+    <script src="js/cerrar sesion.js"></script>
+    <script src="js/mantenimientos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>

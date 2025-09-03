@@ -1,0 +1,275 @@
+/* ====== Encabezado de página ====== */
+.page-main-header .back-button{
+  background:#22c55e; color:#fff; border:none; padding:10px 14px; border-radius:10px;
+  font-weight:700; display:inline-flex; align-items:center; gap:.5rem; cursor:pointer;
+  box-shadow:0 8px 24px rgba(16,24,40,.06); transition:background .2s ease, transform .05s ease;
+}
+.page-main-header .back-button:hover{ background:#16a34a; transform:translateY(-1px); }
+
+/* ====== Tarjetas/Secciones ====== */
+.section-card{
+  background:#fff; border:1px solid #e5e7eb; border-radius:14px;
+  box-shadow:0 8px 24px rgba(16,24,40,.06); margin-bottom:20px;
+}
+.section-card > h3{
+  margin:0; padding:16px 18px; border-bottom:1px solid #e5e7eb; font-size:1.1rem;
+}
+
+/* ====== Resumen de estado ====== */
+.room-status-overview{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:16px 18px;
+}
+.status-box{
+  background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px;
+  padding:14px; text-align:center;
+}
+.status-box h4{ margin:0 0 6px; font-size:.95rem; color:#6b7280; }
+.status-box p{ margin:0; font-size:1.4rem; font-weight:800; }
+
+/* ====== Acciones de tabla ====== */
+.table-actions{
+  display:flex; gap:10px; align-items:center; padding:16px 18px;
+}
+.table-actions .search-input,
+.table-actions .filter-select{
+  background:#fff; color:#1f2937; border:1px solid #e5e7eb; border-radius:8px;
+  padding:10px 12px; outline:none;
+}
+.table-actions .btn-export{
+  background:#2563eb; color:#fff; border:none; padding:10px 14px; border-radius:10px;
+  cursor:pointer; font-weight:700; box-shadow:0 8px 24px rgba(16,24,40,.06);
+}
+.table-actions .btn-export:hover{ background:#1d4ed8; }
+
+/* ====== Tabla ====== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table th,
+.data-table td {
+    text-align: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-table th {
+    color: #777;
+    font-weight: 600;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table td {
+    color: #444;
+    font-size: 0.95em;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ====== Badges de estado ====== */
+.status-badge{
+  display:inline-block; min-width:110px; text-align:center; font-weight:700;
+  padding:6px 10px; border-radius:999px; font-size:.8rem;
+}
+.status-badge.available{    background:#dcfce7; color:#1a6516; }
+.status-badge.occupied{     background:#fee2e2; color:#b11c1c; }
+.status-badge.cleaning{     background:#fef3c7; color:#e1dd17; }
+.status-badge.maintenance{  background:#e0e7ff; color:#7a0cbe; }
+.status-badge.other{        background:#f3f4f6; color:#000000; }
+
+/* ====== Botones de acción en filas ====== */
+.btn-action{
+  background:#fff; color:#1f2937; border:1px solid #e5e7eb;
+  padding:8px 10px; border-radius:8px; cursor:pointer; margin-right:6px;
+}
+.btn-action:hover{ background:#f9fafb; }
+.btn-action.edit{}
+
+/* ====== Modal: Crear/Editar ====== */
+.modal{ position:fixed; inset:0; display:none; z-index:50; }
+.modal.show{ display:block; }
+.modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); }
+.modal-dialog{
+  position:relative; z-index:1; width:min(760px, calc(100% - 24px));
+  margin:6vh auto; background:#fff; border:1px solid #e5e7eb; border-radius:14px;
+  box-shadow:0 20px 60px rgba(0,0,0,.15);
+}
+.modal-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px; border-bottom:1px solid #e5e7eb; background:#fbfcfd;
+}
+.modal-header h3{ margin:0; font-size:1.05rem; font-weight:800; }
+.modal-close{ background:transparent; color:#111827; border:none; font-size:1.1rem; cursor:pointer; }
+.modal-body{ padding:16px 18px; }
+
+.grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.form-group{ display:flex; flex-direction:column; gap:6px; }
+.form-group.full{ grid-column:1 / -1; }
+label{ color:#374151; font-size:.86rem; font-weight:600; }
+input[type="text"], textarea, select{
+  background:#fff; color:#1f2937; border:1px solid #e5e7eb; border-radius:8px;
+  padding:10px 12px; outline:none;
+}
+textarea{ resize:vertical; }
+
+.modal-footer{
+  display:flex; justify-content:flex-end; gap:10px;
+  padding:12px 18px; border-top:1px solid #e5e7eb; background:#fbfcfd;
+}
+.btn{ cursor:pointer; border:none; padding:10px 14px; border-radius:8px; }
+.btn-primary{ background:#22c55e; color:#fff; font-weight:800; }
+.btn-primary:hover{ background:#16a34a; }
+.btn-secondary{ background:#fff; color:#1f2937; border:1px solid #e5e7eb; }
+.btn-secondary:hover{ background:#f9fafb; }
+
+/* ====== Responsive ====== */
+@media (max-width: 900px){
+  .room-status-overview{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width: 680px){
+  .grid{ grid-template-columns:1fr; }
+  .table-actions{ flex-wrap:wrap; }
+  .table-actions .search-input{ flex:1; min-width:220px; }
+}
+/* =======================
+   SweetAlert2 – Modal moderno compacto (Habitaciones/Clientes)
+   ======================= */
+.swal2-popup.swal2-modern{
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 24px 60px rgba(16,24,40,.15);
+  padding: 0;
+    max-width: 750px;   /* ancho máximo del modal */
+  width: 90%;  
+  overflow: hidden;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #fff;
+}
+
+.swal2-modern .swal2-title{
+  margin: 0;
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 1.0rem;
+  font-weight: 800;
+  border-bottom: 1px solid #eef0f2;
+  background: #fbfcfd;
+  color: #111827;
+}
+
+/* Tamaño del contenido del modal (ajusta width si lo quieres más chico/grande) */
+.swal2-modern .swal2-html-container{
+  padding: 12px 14px;
+  margin: 0;
+  width: 720px; /* <— cambia a 640px o 600px si lo quieres más compacto */
+  max-width: calc(100vw - 32px);
+}
+
+/* Acciones (botones abajo) */
+.swal2-modern .swal2-actions{
+  margin: 0;
+  padding: 10px 14px;
+  border-top: 1px solid #eef0f2;
+  background: #fbfcfd;
+  justify-content: flex-end; /* centra => 'center' si lo prefieres */
+  gap: 8px;
+}
+.swal2-modern .swal2-styled{
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-weight: 800 !important;
+}
+.swal2-modern .swal2-styled.swal2-confirm{
+  background: #22c55e !important;
+}
+.swal2-modern .swal2-styled.swal2-confirm:hover{
+  background: #16a34a !important;
+}
+.swal2-modern .swal2-styled.swal2-cancel{
+  background: #fff !important;
+  color: #1f2937 !important;
+  border: 1px solid #e5e7eb !important;
+}
+.swal2-modern .swal2-styled.swal2-cancel:hover{
+  background: #f9fafb !important;
+}
+
+/* ====== Grid del formulario dentro del modal ====== */
+.swal2-modern .swal2-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+}
+.swal2-modern .swal2-grid.compact{
+  grid-template-columns: 1fr 1fr;  /* 2 columnas compactas */
+  gap: 10px;
+}
+.swal2-modern .swal2-grid .full{ grid-column: 1 / -1; }
+
+/* Campos compactos */
+.swal2-modern .fg{ display:flex; flex-direction:column; gap:6px; }
+.swal2-modern .fg label{ font-size:.84rem; font-weight:700; color:#374151; }
+.swal2-modern .input{
+  background:#fff; color:#1f2937;
+  border:1px solid #e5e7eb; border-radius:10px;
+  padding:8px 10px; height:38px; outline:none;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.swal2-modern .textarea{
+  background:#fff; color:#1f2937;
+  border:1px solid #e5e7eb; border-radius:10px;
+  padding:10px 12px; min-height:84px; resize:vertical; outline:none;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.swal2-modern .input:focus,
+.swal2-modern .textarea:focus{
+  border-color:#bfdbfe;
+  box-shadow:0 0 0 3px rgba(37,99,235,.12);
+}
+
+/* ====== (Opcional) Soporte para avatar (Clientes) ====== */
+.swal2-modern .avatar-col{
+  grid-row: 1 / span 3;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+.swal2-modern .avatar-preview{
+  width: 88px; height: 88px; border-radius: 999px; overflow:hidden;
+  border: 2px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.swal2-modern .avatar-preview img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.swal2-modern .upload-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:#f3f4f6; color:#111827; border:1px solid #e5e7eb;
+  border-radius:999px; padding:6px 10px; cursor:pointer; font-weight:700;
+}
+.swal2-modern .upload-btn:hover{ background:#eef2f7; }
+.swal2-modern .hint{ color:#6b7280; font-size:.72rem; }
+
+/* ====== Animaciones (sutiles) ====== */
+.swal2-show.swal2-modern{ animation: modalIn .18s ease-out both; }
+.swal2-hide.swal2-modern{ animation: modalOut .12s ease-in both; }
+@keyframes modalIn{
+  from{ opacity:0; transform: translateY(6px) scale(.985); }
+  to  { opacity:1; transform: translateY(0)    scale(1); }
+}
+@keyframes modalOut{
+  from{ opacity:1; transform: translateY(0)    scale(1); }
+  to  { opacity:0; transform: translateY(6px) scale(.985); }
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 760px){
+  .swal2-modern .swal2-html-container{ width: auto; }
+  .swal2-modern .swal2-grid,
+  .swal2-modern .swal2-grid.compact{ grid-template-columns: 1fr; }
+  .swal2-modern .swal2-grid .full{ grid-column: 1 / -1; }
+}

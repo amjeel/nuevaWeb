@@ -1,0 +1,605 @@
+/* --- Reset Básico y Estilos Generales --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    /* Asegúrate de importar esta fuente desde Google Fonts */
+    line-height: 1.6;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8f9fa;
+    /* Fondo general más claro */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* --- Estilos para Páginas de Autenticación (Login, Registro, Recuperación) --- */
+.auth-body {
+    background: linear-gradient(135deg, #e0f2f7, #bbdefb);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.auth-card {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+    width: 100%;
+}
+
+.auth-logo {
+    margin-bottom: 25px;
+}
+
+.auth-logo img {
+    width: 80px;
+    height: auto;
+}
+
+.auth-card h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.auth-subtitle {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.password-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 0.85em;
+}
+
+.password-options label {
+    margin-bottom: 0;
+    cursor: pointer;
+    color: #666;
+}
+
+.password-options input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.forgot-password {
+    color: #007bff;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #0056b3;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.social-login {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.btn-google-sign-in {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-google-sign-in img {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-google-sign-in:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+}
+
+.auth-footer {
+    margin-top: 25px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.auth-footer a {
+    color: #007bff;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.auth-footer a:hover {
+    color: #0056b3;
+}
+
+/* --- Estilos Globales de Layout para Dashboard/Main Pages --- */
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #eef1f6;
+    /* Fondo del área de contenido */
+}
+
+/* --- Estilos del Sidebar --- */
+.sidebar {
+    width: 280px;
+    /* Ancho del sidebar, ligeramente más ancho */
+    background-color: #f0f3f8;
+    /* Fondo muy claro, casi blanco */
+    color: #333;
+    padding: 30px 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+    /* Sombra sutil */
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e0e0e0;
+    /* Borde sutil a la derecha */
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 0 20px;
+}
+
+.sidebar-logo {
+    width: 70px;
+    /* Tamaño del logo */
+    margin-bottom: 10px;
+    /* Eliminar filtro: el logo debe ser visible en fondo claro, no blanco invertido */
+    /* filter: brightness(0) invert(1); */
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 22px;
+    color: #2c3e50;
+    /* Color de texto oscuro */
+    font-weight: 700;
+    /* Negrita */
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav .nav-item {
+    margin-bottom: 8px;
+    /* Espacio entre elementos de menú */
+}
+
+.sidebar-nav .nav-item a {
+    display: flex;
+    /* Para alinear icono y texto */
+    align-items: center;
+    padding: 15px 30px;
+    /* Más padding */
+    color: #555;
+    /* Color de texto más suave */
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
+    border-left: 5px solid transparent;
+    /* Borde izquierdo para estado activo/hover */
+    font-size: 1em;
+    font-weight: 500;
+}
+
+/* Estilos para iconos (ej. Font Awesome si los añades) */
+.sidebar-nav .nav-item a i {
+    margin-right: 12px;
+    font-size: 1.2em;
+    color: #888;
+    /* Color por defecto del icono */
+    transition: color 0.2s ease;
+}
+
+.sidebar-nav .nav-item a:hover {
+    background-color: #e5eaf2;
+    /* Fondo al pasar el mouse */
+    border-left-color: #4CAF50;
+    /* Verde brillante al pasar el mouse */
+    color: #2c3e50;
+    /* Texto más oscuro al pasar el mouse */
+}
+
+.sidebar-nav .nav-item a:hover i {
+    color: #4CAF50;
+    /* Icono verde al pasar el mouse */
+}
+
+.sidebar-nav .nav-item.active a {
+    background-color: #d8e1ed;
+    /* Fondo para el elemento activo */
+    border-left-color: #4CAF50;
+    /* Borde izquierdo verde para activo */
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.sidebar-nav .nav-item.active a i {
+    color: #4CAF50;
+    /* Icono verde para activo */
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+    /* Separador */
+}
+
+.btn-logout {
+    background-color: #e74c3c;
+    /* Rojo para logout */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.btn-logout:hover {
+    background-color: #c0392b;
+}
+
+.sidebar-user-profile {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px 0;
+    border-top: 1px solid #e0e0e0;
+    padding-left: 5px;
+}
+
+.sidebar-user-avatar {
+    width: 50px;
+    /* Avatar más grande */
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-user-details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.sidebar-user-name {
+    font-weight: 700;
+    color: #333;
+    font-size: 1.1em;
+    margin-bottom: 4px;
+}
+
+.sidebar-user-email {
+    font-size: 0.9em;
+    color: #777;
+}
+
+/* --- Área de Contenido Principal (Dashboard/Main Pages) --- */
+.content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    /* Padding será manejado por .page-header y .content-grid */
+}
+
+.top-header {
+    background-color: #ffffff;
+    /* Blanco para la barra superior */
+    padding: 15px 30px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.company-name {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+}
+
+.user-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-profile-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #eee;
+}
+
+.user-profile-header span {
+    font-weight: 500;
+    color: #555;
+}
+
+.page-content-wrapper {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #eef1f6;
+    /* Fondo del área de contenido principal */
+}
+
+.page-main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-main-header h2 {
+    font-size: 2.5em;
+    /* Título más grande */
+    color: #2c3e50;
+    margin: 0;
+}
+
+.back-button {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    color: #555;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button:hover {
+    background-color: #f0f0f0;
+    border-color: #aaa;
+}
+
+/* --- Media Queries para Responsividad --- */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 200px;
+        /* Reducir ancho del sidebar */
+    }
+
+    .sidebar-header h3 {
+        font-size: 18px;
+    }
+
+    .sidebar-nav .nav-item a {
+        padding: 12px 20px;
+        font-size: 0.9em;
+    }
+
+    .sidebar-nav .nav-item a i {
+        font-size: 1em;
+    }
+
+    .sidebar-user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .sidebar-user-name {
+        font-size: 1em;
+    }
+
+    .sidebar-user-email {
+        font-size: 0.8em;
+    }
+
+    .page-main-header h2 {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 10px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .sidebar-header {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidebar-header h3 {
+        margin-left: 10px;
+    }
+
+    .sidebar-nav ul {
+        display: flex;
+        overflow-x: auto;
+        padding: 0 10px;
+        justify-content: center;
+    }
+
+    .sidebar-nav .nav-item {
+        margin-bottom: 0;
+        margin-right: 15px;
+    }
+
+    .sidebar-nav .nav-item:last-child {
+        margin-right: 0;
+    }
+
+    .sidebar-nav .nav-item a {
+        padding: 8px 15px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        font-size: 0.85em;
+    }
+
+    .sidebar-nav .nav-item a:hover,
+    .sidebar-nav .nav-item.active a {
+        border-left-color: transparent;
+        border-bottom-color: #4CAF50;
+        background-color: transparent;
+    }
+
+    .sidebar-footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 20px;
+        border-top: none;
+    }
+
+    .sidebar-user-profile {
+        width: 100%;
+        justify-content: center;
+        padding-top: 10px;
+        border-top: 1px solid #e0e0e0;
+        margin-top: 10px;
+    }
+
+    .btn-logout {
+        width: auto;
+        padding: 8px 12px;
+        margin-bottom: 10px;
+    }
+
+    .top-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 20px;
+    }
+
+    .user-profile-header {
+        margin-top: 10px;
+    }
+
+    .page-content-wrapper {
+        padding: 20px;
+    }
+
+    .page-main-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .page-main-header h2 {
+        margin-bottom: 10px;
+        font-size: 1.8em;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        /* Una columna en móviles */
+    }
+}

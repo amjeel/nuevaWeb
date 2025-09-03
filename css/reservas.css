@@ -1,0 +1,220 @@
+/* --- Estilos para la página de Reservas --- */
+.section-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.section-card h3 {
+    font-size: 1.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.back-button {
+  background-color: #28a745; 
+  color: white; 
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-input,
+.filter-select,
+.date-filter {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95em;
+    max-width: 250px;
+    flex-grow: 1;
+}
+
+.btn-export {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-export:hover {
+    background-color: #1976d2;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table th,
+.data-table td {
+    text-align: left;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-table th {
+    color: #777;
+    font-weight: 600;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table td {
+    color: #444;
+    font-size: 0.95em;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar-small {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status-badge.available {
+    /* Confirmada */
+    background-color: #e8f5e9;
+    color: #4CAF50;
+}
+
+.status-badge.cleaning {
+    /* Pendiente */
+    background-color: #fff3e0;
+    color: #ff9800;
+}
+
+.status-badge.occupied {
+    /* Cancelada */
+    background-color: #ffebee;
+    color: #f44336;
+}
+
+.btn-action {
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 1.1em;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.btn-action:hover {
+    color: #2196f3;
+}
+
+.btn-action.edit:hover {
+    color: #ffc107;
+}
+
+.btn-action.delete:hover {
+    color: #f44336;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .table-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-input,
+    .filter-select,
+    .date-filter {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .data-table {
+        overflow-x: auto;
+        display: block;
+    }
+
+    .data-table thead,
+    .data-table tbody,
+    .data-table th,
+    .data-table td,
+    .data-table tr {
+        display: block;
+    }
+
+    .data-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .data-table tr {
+        border: 1px solid #f0f0f0;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        background-color: #fff;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .data-table td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+
+    .data-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 600;
+        color: #777;
+    }
+}

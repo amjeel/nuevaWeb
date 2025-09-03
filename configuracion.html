@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finder Hotel - Configuración</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/configuracion.css">
+</head>
+
+<body>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo">
+                <h3>Finder Hotel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="nav-item"><a href="habitaciones.html"><i class="fas fa-bed"></i> Habitaciones</a></li>
+                    <li class="nav-item"><a href="reservas.html"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+                    <li class="nav-item"><a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a></li>
+                    <li class="nav-item"><a href="clientes.html"><i class="fas fa-user-friends"></i> Clientes</a></li>
+                    <li class="nav-item"><a href="checkin-checkout.html"><i class="fas fa-exchange-alt"></i>
+                            Check-in/Check-out</a></li>
+                    <li class="nav-item"><a href="mantenimientos.html"><i class="fas fa-tools"></i> Mantenimiento</a>
+                    </li>
+                    <li class="nav-item active"><a href="configuracion.html"><i class="fas fa-cog"></i>
+                            Configuración</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
+                <div class="sidebar-user-profile">
+                    <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar">
+                    <div class="sidebar-user-details">
+                        <span class="sidebar-user-name">Adriana Montoya</span>
+                        <span class="sidebar-user-email">adriana@finder.com</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <main class="content">
+            <header class="top-header">
+                <div class="company-name">Finder Hotel</div>
+                <div class="user-profile-header">
+                    <img src="assets/images/user-avatar.jpg" alt="User Avatar">
+                    <span>Adriana Montoya</span>
+                </div>
+            </header>
+            <div class="page-content-wrapper">
+                <div class="page-main-header">
+                    <h2>Configuración del Hotel</h2>
+                </div>
+                <div id="general" class="tab-content active">
+                    <section class="section-card">
+                        <h3>Información General del Hotel</h3>
+                        <form class="config-form">
+                            <div class="form-group">
+                                <label for="hotel-name">Nombre del Hotel:</label>
+                                <input type="text" id="hotel-name" value="Finder Hotel S.A. de C.V.">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Dirección Principal:</label>
+                                <input type="text" id="address"
+                                    value="123 Calle Principal, Colonia San Benito, San Salvador">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Teléfono de Contacto:</label>
+                                <input type="tel" id="phone" value="+503 2222-3333">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email de Contacto:</label>
+                                <input type="email" id="email" value="info@finderhotel.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="website">Sitio Web (URL):</label>
+                                <input type="url" id="website" value="https://www.finderhotel.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="logo-upload">Logo del Hotel:</label>
+                                <input type="file" id="logo-upload" accept="image/*">
+                                <small>El logo actual es: <a href="assets/images/finder-logo.png"
+                                        target="_blank">finder-logo.png</a></small>
+                            </div>
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar Cambios
+                                Generales</button>
+                        </form>
+                    </section>
+                </div>
+
+                <div id="tarifas" class="tab-content">
+                    <section class="section-card">
+                        <h3>Tarifas y Políticas de Precios</h3>
+                        <form class="config-form">
+                            <div class="form-group">
+                                <label for="base-currency">Moneda Predeterminada:</label>
+                                <select id="base-currency">
+                                    <option value="usd" selected>USD - Dólar Estadounidense</option>
+                                    <option value="eur">EUR - Euro</option>
+                                    <option value="gbp">GBP - Libra Esterlina</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tax-rate">Tasa de Impuestos (%) (IVA):</label>
+                                <input type="number" id="tax-rate" value="13" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="service-charge">Cargo por Servicio (%) (opcional):</label>
+                                <input type="number" id="service-charge" value="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="min-stay">Estancia Mínima por Defecto (noches):</label>
+                                <input type="number" id="min-stay" value="1" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="checkin-time">Hora Estándar Check-in:</label>
+                                <input type="time" id="checkin-time" value="15:00">
+                            </div>
+                            <div class="form-group">
+                                <label for="checkout-time">Hora Estándar Check-out:</label>
+                                <input type="time" id="checkout-time" value="12:00">
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="allow-late-checkout">
+                                <label for="allow-late-checkout">Permitir Late Check-out (con cargo adicional)</label>
+                            </div>
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar Ajustes de
+                                Tarifas</button>
+                        </form>
+                    </section>
+                </div>
+
+                <div id="reservas" class="tab-content">
+                    <section class="section-card">
+                        <h3>Políticas y Opciones de Reserva</h3>
+                        <form class="config-form">
+                            <div class="form-group">
+                                <label for="reservation-buffer">Buffer entre reservas (horas):</label>
+                                <input type="number" id="reservation-buffer" value="2" min="0">
+                                <small>Tiempo mínimo entre el check-out de una reserva y el check-in de la
+                                    siguiente.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment-policy">Política de Pago por Defecto:</label>
+                                <textarea id="payment-policy"
+                                    rows="4">Se requiere un depósito del 50% al momento de la reserva. El saldo restante se paga al check-in.</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="cancellation-policy">Política de Cancelación por Defecto:</label>
+                                <textarea id="cancellation-policy"
+                                    rows="4">Cancelaciones realizadas con 48 horas de anticipación recibirán un reembolso completo. Cancelaciones tardías o no-shows no son reembolsables.</textarea>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="auto-confirm-reservations" checked>
+                                <label for="auto-confirm-reservations">Auto-confirmar reservas online</label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="guest-email-required" checked>
+                                <label for="guest-email-required">Requerir email del huésped para reserva</label>
+                            </div>
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar Ajustes de
+                                Reserva</button>
+                        </form>
+                    </section>
+                </div>
+
+                <div id="habitaciones" class="tab-content">
+                    <section class="section-card">
+                        <h3>Gestión de Tipos de Habitación</h3>
+                        <p>Aquí puedes definir los tipos de habitación disponibles en tu hotel, sus características por
+                            defecto y amenidades.</p>
+                        <button class="btn-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Añadir
+                            Nuevo Tipo de Habitación</button>
+
+                        <div class="room-type-list">
+                            <div class="room-type-item">
+                                <h4>Doble Estándar</h4>
+                                <p>Capacidad: 2 personas</p>
+                                <p>Amenidades: WiFi, TV, Baño Privado</p>
+                                <p>Precio Base: $80.00 USD</p>
+                                <div class="item-actions">
+                                    <button class="btn-action edit"><i class="fas fa-edit"></i> Editar</button>
+                                    <button class="btn-action delete"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                                </div>
+                            </div>
+                            <div class="room-type-item">
+                                <h4>Suite Ejecutiva</h4>
+                                <p>Capacidad: 4 personas</p>
+                                <p>Amenidades: WiFi, Smart TV, Jacuzzi, Minibar</p>
+                                <p>Precio Base: $150.00 USD</p>
+                                <div class="item-actions">
+                                    <button class="btn-action edit"><i class="fas fa-edit"></i> Editar</button>
+                                    <button class="btn-action delete"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="notificaciones" class="tab-content">
+                    <section class="section-card">
+                        <h3>Configuración de Notificaciones</h3>
+                        <form class="config-form">
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="email-notif-reservations" checked>
+                                <label for="email-notif-reservations">Enviar confirmación de reserva por email al
+                                    cliente</label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="email-notif-checkin-out" checked>
+                                <label for="email-notif-checkin-out">Recibir notificaciones por email de
+                                    Check-in/Check-out</label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="email-notif-maintenance">
+                                <label for="email-notif-maintenance">Recibir notificaciones por email de nuevas
+                                    solicitudes de mantenimiento</label>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="sms-notif-alerts">
+                                <label for="sms-notif-alerts">Enviar alertas críticas por SMS al administrador</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-notification-email">Email de Administrador para Alertas:</label>
+                                <input type="email" id="admin-notification-email" value="admin@finderhotel.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="daily-report-time">Hora de Envío de Reporte Diario (Email):</label>
+                                <input type="time" id="daily-report-time" value="09:00">
+                            </div>
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar Ajustes de
+                                Notificación</button>
+                        </form>
+                    </section>
+                </div>
+
+                <div id="integraciones" class="tab-content">
+                    <section class="section-card">
+                        <h3>Integraciones con Plataformas Externas</h3>
+                        <p>Conecta Finder Hotel con otros servicios para optimizar tus operaciones.</p>
+
+                        <div class="integration-item">
+                            <div class="integration-details">
+                                <h4>Sistema de Pagos (Stripe)</h4>
+                                <p>Gestiona los pagos de forma segura y eficiente.</p>
+                                <span class="status-badge available">Conectado</span>
+                            </div>
+                            <div class="integration-actions">
+                                <button class="btn-action edit"><i class="fas fa-cog"></i> Configurar</button>
+                                <button class="btn-action delete"><i class="fas fa-unlink"></i> Desconectar</button>
+                            </div>
+                        </div>
+                        <div class="integration-item">
+                            <div class="integration-details">
+                                <h4>Plataforma de Reservas (Booking.com)</h4>
+                                <p>Sincroniza tus reservas y disponibilidad con Booking.com.</p>
+                                <span class="status-badge occupied">Desconectado</span>
+                            </div>
+                            <div class="integration-actions">
+                                <button class="btn-action primary"><i class="fas fa-link"></i> Conectar</button>
+                            </div>
+                        </div>
+                        <div class="integration-item">
+                            <div class="integration-details">
+                                <h4>Contabilidad (QuickBooks)</h4>
+                                <p>Exporta datos financieros directamente a tu software contable.</p>
+                                <span class="status-badge cleaning">Pendiente</span>
+                            </div>
+                            <div class="integration-actions">
+                                <button class="btn-action primary"><i class="fas fa-link"></i> Conectar</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="seguridad" class="tab-content">
+                    <section class="section-card">
+                        <h3>Configuración de Seguridad</h3>
+                        <form class="config-form">
+                            <div class="form-group">
+                                <label for="password-policy">Política de Contraseñas (Mínimo caracteres):</label>
+                                <input type="number" id="password-policy" value="8" min="6" max="20">
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="two-factor-auth">
+                                <label for="two-factor-auth">Forzar Autenticación de Dos Factores (2FA) para
+                                    Administradores</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="session-timeout">Tiempo de Inactividad de Sesión (minutos):</label>
+                                <input type="number" id="session-timeout" value="60" min="10">
+                            </div>
+                            <div class="form-group">
+                                <label for="failed-login-attempts">Bloqueo de Cuenta tras Fallos de Login:</label>
+                                <input type="number" id="failed-login-attempts" value="5" min="3">
+                                <small>Número de intentos fallidos antes de bloquear una cuenta temporalmente.</small>
+                            </div>
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar Ajustes de
+                                Seguridad</button>
+                        </form>
+                    </section>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script src="js/cerrar sesion.js"></script>
+</body>
+
+</html>

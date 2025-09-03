@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finder Hotel - Dashboard de Administración</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo">
+                <h3>Finder Hotel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="nav-item"><a href="habitaciones.html"><i class="fas fa-bed"></i> Habitaciones</a></li>
+                    <li class="nav-item"><a href="reservas.html"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+                    <li class="nav-item"><a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a></li>
+                    <li class="nav-item"><a href="clientes.html"><i class="fas fa-user-friends"></i> Clientes</a></li>
+                    <li class="nav-item"><a href="checkin-checkout.html"><i class="fas fa-exchange-alt"></i>
+                            Check-in/Check-out</a></li>
+                    <li class="nav-item"><a href="mantenimientos.html"><i class="fas fa-tools"></i> Mantenimiento</a>
+                    </li>
+                    <li class="nav-item"><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
+                <div class="sidebar-user-profile">
+                    <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar">
+                    <div class="sidebar-user-details">
+                        <span class="sidebar-user-name">Adriana Montoya</span>
+                        <span class="sidebar-user-email">adriana@finder.com</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <main class="content">
+            <header class="top-header">
+                <div class="company-name">Finder Hotel</div>
+                <div class="user-profile-header">
+                    <img src="assets/images/user-avatar.jpg" alt="User Avatar">
+                    <span>Adriana Montoya</span>
+                </div>
+            </header>
+            <div class="page-content-wrapper">
+                <div class="page-main-header">
+                    <h2>Resumen del Hotel</h2>
+                </div>
+
+                <div class="highlight-cards-grid">
+                    <div class="highlight-card">
+                        <div class="highlight-card-header">
+                            <h4>Reservas Activas</h4>
+                            <i class="fas fa-calendar-check icon"></i>
+                        </div>
+                        <div class="highlight-value">124</div>
+                        <div class="highlight-progress-bar">
+                            <div class="highlight-progress" style="width: 75%;"></div>
+                        </div>
+                        <div class="highlight-card-footer">
+                            <span><i class="fas fa-chart-line"></i> +15% esta semana</span>
+                            <span>Última actualización</span>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card">
+                        <div class="highlight-card-header">
+                            <h4>Habitaciones Disponibles</h4>
+                            <i class="fas fa-door-open icon"></i>
+                        </div>
+                        <div class="highlight-value">48</div>
+                        <div class="highlight-progress-bar">
+                            <div class="highlight-progress" style="width: 30%;"></div>
+                        </div>
+                        <div class="highlight-card-footer">
+                            <span><i class="fas fa-info-circle"></i> 120 total</span>
+                            <span>Ocupación 70%</span>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card">
+                        <div class="highlight-card-header">
+                            <h4>Huéspedes Actuales</h4>
+                            <i class="fas fa-user-alt icon"></i>
+                        </div>
+                        <div class="highlight-value">230</div>
+                        <div class="highlight-progress-bar">
+                            <div class="highlight-progress" style="width: 90%;"></div>
+                        </div>
+                        <div class="highlight-card-footer">
+                            <span><i class="fas fa-users"></i> Grupos: 15</span>
+                            <span>Individuales: 200</span>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card">
+                        <div class="highlight-card-header">
+                            <h4>Check-ins Hoy</h4>
+                            <i class="fas fa-sign-in-alt icon"></i>
+                        </div>
+                        <div class="highlight-value">18</div>
+                        <div class="highlight-progress-bar">
+                            <div class="highlight-progress" style="width: 60%;"></div>
+                        </div>
+                        <div class="highlight-card-footer">
+                            <span><i class="fas fa-clock"></i> Pendientes: 5</span>
+                            <span>Completados: 13</span>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card">
+                        <div class="highlight-card-header">
+                            <h4>Check-outs Hoy</h4>
+                            <i class="fas fa-sign-out-alt icon"></i>
+                        </div>
+                        <div class="highlight-value">22</div>
+                        <div class="highlight-progress-bar">
+                            <div class="highlight-progress" style="width: 80%;"></div>
+                        </div>
+                        <div class="highlight-card-footer">
+                            <span><i class="fas fa-clock"></i> Pendientes: 4</span>
+                            <span>Completados: 18</span>
+                        </div>
+                    </div>
+
+                    <div class="highlight-card">
+                        <div class="highlight-card-header">
+                            <h4>Mantenimiento Pendiente</h4>
+                            <i class="fas fa-screwdriver icon"></i>
+                        </div>
+                        <div class="highlight-value">7</div>
+                        <div class="highlight-progress-bar">
+                            <div class="highlight-progress"
+                                style="width: 20%; background: linear-gradient(to right, #ff9800, #ff5722);"></div>
+                        </div>
+                        <div class="highlight-card-footer">
+                            <span><i class="fas fa-exclamation-triangle"></i> Urgente: 2</span>
+                            <span>Programado: 5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity-section">
+                    <h3>Últimas Operaciones</h3>
+                    <table class="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Tipo de Operación</th>
+                                <th>Detalle</th>
+                                <th>Huésped/Empleado</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="status-pill check-in">Check-in</span></td>
+                                <td>Habitación 101, Noche Adicional</td>
+                                <td class="user-info">
+                                    <img src="img/Juan perez.png" alt="Guest Avatar"
+                                        class="user-avatar-small"> Juan Pérez
+                                </td>
+                                <td>22/07/2025 15:30</td>
+                                <td>Completado</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-pill reserva">Reserva</span></td>
+                                <td>Habitación 205, 3 Noches</td>
+                                <td class="user-info">
+                                    <img src="img/Maria.png" alt="Guest Avatar"
+                                        class="user-avatar-small"> María García
+                                </td>
+                                <td>22/07/2025 14:00</td>
+                                <td>Confirmada</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-pill mantenimiento">Mantenimiento</span></td>
+                                <td>Fuga en baño, Habitación 310</td>
+                                <td class="user-info">
+                                    <img src="img/Luis.png" alt="Staff Avatar"
+                                        class="user-avatar-small"> Luis Hernández (Técnico)
+                                </td>
+                                <td>22/07/2025 10:45</td>
+                                <td>Pendiente</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-pill check-out">Check-out</span></td>
+                                <td>Habitación 402</td>
+                                <td class="user-info">
+                                    <img src="img/Ana.png" alt="Guest Avatar"
+                                        class="user-avatar-small"> Ana López
+                                </td>
+                                <td>22/07/2025 09:00</td>
+                                <td>Completado</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-pill reserva">Reserva</span></td>
+                                <td>Suite Presidencial, 5 Noches</td>
+                                <td class="user-info">
+                                    <img src="img/Carlos.png" alt="Guest Avatar"
+                                        class="user-avatar-small"> Carlos Sánchez
+                                </td>
+                                <td>21/07/2025 18:00</td>
+                                <td>Pendiente Pago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script src="js/cerrar sesion.js"></script>
+</body>
+
+</html>

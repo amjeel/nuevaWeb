@@ -1,0 +1,225 @@
+:root {
+    --primary-blue: #007bff; /* Color principal del botón y enlaces */
+    --light-blue-bg: #e0f2f7; /* Fondo general de la página */
+    --white-card-bg: #ffffff; /* Fondo de la tarjeta de login */
+    --text-color-dark: #333333; /* Texto principal */
+    --text-color-light: #666666; /* Texto secundario/placeholder */
+    --border-color: #dddddd; /* Bordes de inputs */
+    --google-btn-bg: #f8f8f8; /* Fondo botón Google */
+    --error-red: #dc3545; /* Color para mensajes de error */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--light-blue-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.login-container {
+    background-color: var(--white-card-bg);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* Para el efecto de la sombra duplicada */
+}
+
+/* Duplicado de la sombra para el efecto de la imagen */
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: 15px; /* Ligeramente más abajo */
+    left: 15px; /* Ligeramente más a la derecha */
+    right: -15px;
+    bottom: -15px;
+    background-color: var(--white-card-bg);
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); /* Sombra más suave */
+    z-index: -1; /* Detrás del contenido principal */
+}
+
+.logo {
+    margin-bottom: 25px;
+}
+
+.logo img {
+    max-width: 120px;
+    height: auto;
+}
+
+h1 {
+    color: var(--text-color-dark);
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: var(--text-color-light);
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color-dark);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--text-color-dark);
+    box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+    color: var(--text-color-light);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.error-message {
+    color: var(--error-red);
+    font-size: 12px;
+    margin-top: 5px;
+    min-height: 15px; /* Para mantener el espacio */
+}
+
+.options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    color: var(--text-color-light);
+}
+
+.remember-me input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.1); /* Ajusta el tamaño del checkbox */
+}
+
+.forgot-password {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Un azul más oscuro al pasar el ratón */
+}
+
+.divider {
+    margin: 30px 0;
+    position: relative;
+    text-align: center;
+    color: var(--text-color-light);
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--border-color);
+    z-index: 0;
+}
+
+.divider span {
+    background-color: var(--white-card-bg);
+    padding: 0 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.btn-google {
+    background-color: var(--google-btn-bg);
+    color: var(--text-color-dark);
+    padding: 15px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-google:hover {
+    background-color: #ededed;
+}
+
+.btn-google img {
+    width: 20px;
+    height: 20px;
+}
+
+.signup-link {
+    margin-top: 30px;
+    color: var(--text-color-light);
+    font-size: 15px;
+}
+
+.signup-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}

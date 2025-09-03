@@ -1,0 +1,340 @@
+/* --- Estilos para la página de Clientes --- */
+
+.section-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.section-card h3 {
+    font-size: 1.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-input,
+.filter-select {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95em;
+    max-width: 250px;
+    flex-grow: 1;
+}
+
+.back-button {
+  background-color: #28a745; 
+  color: white; 
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #218838; /* Un verde más oscuro al pasar el ratón */
+}
+.btn-export {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-export:hover {
+    background-color: #1976d2;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table th,
+.data-table td {
+    text-align: left;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-table th {
+    color: #777;
+    font-weight: 600;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table td {
+    color: #444;
+    font-size: 0.95em;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar-small {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status-badge.available {
+    /* Frecuente */
+    background-color: #e8f5e9;
+    color: #4CAF50;
+}
+
+.status-badge.cleaning {
+    /* Nuevo */
+    background-color: #fff3e0;
+    color: #ff9800;
+}
+
+.status-badge.occupied {
+    /* VIP (usando el rojo para VIP como destacado) */
+    background-color: #ffebee;
+    color: #f44336;
+}
+
+.btn-action {
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 1.1em;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.btn-action:hover {
+    color: #2196f3;
+}
+
+.btn-action.edit:hover {
+    color: #ffc107;
+}
+
+/* Estadísticas de Clientes */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.stat-box {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s ease;
+}
+
+.stat-box:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+}
+
+.stat-box h4 {
+    margin-top: 0;
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.stat-box p {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .table-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-input,
+    .filter-select {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .data-table {
+        overflow-x: auto;
+        display: block;
+    }
+
+    .data-table thead,
+    .data-table tbody,
+    .data-table th,
+    .data-table td,
+    .data-table tr {
+        display: block;
+    }
+
+    .data-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .data-table tr {
+        border: 1px solid #f0f0f0;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        background-color: #fff;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .data-table td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+
+    .data-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 600;
+        color: #777;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* SweetAlert2 – modal compacto con upload redondo */
+.swal2-popup.swal2-modern{
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 24px 60px rgba(16,24,40,.15);
+  padding: 0;
+  max-width: 750px;   /* ancho máximo del modal */
+  width: 90%;         /* ancho relativo a la pantalla */
+  overflow: hidden;
+    justify-content: center;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #fff;
+}
+
+.swal2-modern .swal2-title{
+  margin: 0; padding: 14px 16px; text-align: left;
+  font-size: 1rem; font-weight: 800; border-bottom: 1px solid #eef0f2;
+  background: #f8fafc;
+}
+.swal2-modern .swal2-html-container{
+  padding: 12px 14px; margin: 0; width: 720px; max-width: calc(100vw - 32px);
+  
+}
+
+/* Grid compacto: 2 columnas + columna avatar fija */
+.swal2-modern .swal2-grid.compact{
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.swal2-modern .swal2-grid .full{ grid-column: 2 / -1; }
+
+.swal2-modern .fg{ display:flex; flex-direction:column; gap:6px; }
+.swal2-modern .fg label{ font-size:.84rem; font-weight:700; color:#111827; }
+
+/* Inputs pequeños */
+.swal2-modern .input{
+  background:#fff; color:#111827; border:1px solid #e5e7eb; border-radius:10px;
+  padding:8px 10px; height:38px; outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+}
+.swal2-modern .input:focus{ border-color:#bfdbfe; box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+
+/* Columna avatar */
+.swal2-modern .avatar-col{
+  grid-row: 1 / span 3; grid-column: 1 / 2;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding:4px;
+}
+.swal2-modern .avatar-preview{
+  width: 88px; height: 88px; border-radius: 999px; overflow:hidden;
+  border: 2px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.swal2-modern .avatar-preview img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.swal2-modern .upload-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:#f3f4f6; color:#111827; border:1px solid #e5e7eb; border-radius:999px;
+  padding:6px 10px; cursor:pointer; font-weight:700; font-size:.82rem;
+}
+.swal2-modern .upload-btn:hover{ background:#eef2f7; }
+.swal2-modern .hint{ color:#6b7280; font-size:.72rem; }
+
+/* Footer botones */
+.swal2-modern .swal2-actions{
+  margin:0; padding:10px 14px; border-top:1px solid #eef0f2; background:#fbfcfd; justify-content:flex-end; gap:8px;
+}
+.swal2-modern .swal2-styled{ border-radius:10px !important; padding:8px 12px !important; font-weight:800 !important; }
+.swal2-modern .swal2-styled.swal2-confirm{ background:#22c55e !important; }
+.swal2-modern .swal2-styled.swal2-confirm:hover{ background:#16a34a !important; }
+.swal2-modern .swal2-styled.swal2-cancel{ background:#fff !important; color:#111827 !important; border:1px solid #e5e7eb !important; }
+.swal2-modern .swal2-styled.swal2-cancel:hover{ background:#f3f4f6 !important; }
+
+/* Responsive */
+@media (max-width: 760px){
+  .swal2-modern .swal2-grid.compact{
+    grid-template-columns: 1fr 1fr; /* avatar arriba, luego 2 cols */
+  }
+  .swal2-modern .avatar-col{ grid-column: 1 / -1; grid-row: 1; }
+  .swal2-modern .swal2-grid .full{ grid-column: 1 / -1; }
+}

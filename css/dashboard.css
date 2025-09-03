@@ -1,0 +1,235 @@
+/* --- Estilos específicos del Dashboard del Hotel --- */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+    /* Espacio entre secciones */
+}
+
+.highlight-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+    /* Espacio debajo de las tarjetas destacadas */
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+/* Estilos para las tarjetas destacadas (en la parte superior, con barra de progreso) */
+.highlight-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Para empujar el footer hacia abajo */
+    overflow: hidden;
+    /* Para el gradiente de fondo */
+    position: relative;
+    color: #333;
+}
+
+.highlight-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.highlight-card-header h4 {
+    font-size: 1.1em;
+    color: #555;
+    margin: 0;
+}
+
+.highlight-card-header .icon {
+    font-size: 1.5em;
+    color: #4CAF50;
+    /* Icono verde */
+}
+
+.highlight-value {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #2c3e50;
+    /* Azul oscuro para el número principal */
+    margin-bottom: 20px;
+}
+
+.highlight-progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.highlight-progress {
+    height: 100%;
+    background: linear-gradient(to right, #4CAF50, #8bc34a);
+    /* Degradado verde */
+    border-radius: 4px;
+}
+
+.highlight-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 10px;
+}
+
+.highlight-card-footer span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.highlight-card-footer span i {
+    font-size: 1em;
+    color: #555;
+}
+
+/* Colores específicos para cada tipo de tarjeta si fuera necesario, usando clases modificadoras */
+/* .highlight-card.reservas { } */
+
+/* Sección de Últimas Operaciones (tabla/lista) */
+.recent-activity-section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+}
+
+.recent-activity-section h3 {
+    font-size: 1.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.activity-table th,
+.activity-table td {
+    text-align: left;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+    /* Líneas más claras */
+}
+
+.activity-table th {
+    color: #777;
+    font-weight: 600;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.activity-table td {
+    color: #444;
+    font-size: 0.95em;
+}
+
+.activity-table tbody tr:last-child td {
+    border-bottom: none;
+    /* Eliminar borde de la última fila */
+}
+
+.activity-table .status-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-pill.check-in {
+    background-color: #e6f7ed;
+    /* Verde muy claro */
+    color: #28a745;
+}
+
+.status-pill.check-out {
+    background-color: #fff3e0;
+    /* Naranja muy claro */
+    color: #ff9800;
+}
+
+.status-pill.reserva {
+    background-color: #e3f2fd;
+    /* Azul muy claro */
+    color: #2196f3;
+}
+
+.status-pill.mantenimiento {
+    background-color: #ffe0b2;
+    /* Naranja-amarillo muy claro */
+    color: #ff5722;
+}
+
+.activity-table .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.activity-table .user-avatar-small {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+/* Responsive adjustments for dashboard content */
+@media (max-width: 768px) {
+
+    .highlight-cards-grid,
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recent-activity-section {
+        padding: 15px;
+    }
+
+    .activity-table th,
+    .activity-table td {
+        padding: 10px 0;
+        font-size: 0.85em;
+    }
+
+    /* Ocultar algunas columnas en pantallas pequeñas si es necesario */
+    .activity-table th:nth-child(3),
+    .activity-table td:nth-child(3) {
+        /* Por ejemplo, ocultar 'ID' si lo hubiera */
+        display: none;
+    }
+}
