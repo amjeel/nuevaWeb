@@ -1,3 +1,4 @@
+/* =================== Sección de tarjetas =================== */
 .section-card {
     background-color: #ffffff;
     border-radius: 12px;
@@ -14,6 +15,7 @@
     padding-bottom: 15px;
 }
 
+/* =================== Acciones y botones =================== */
 .table-actions {
     display: flex;
     justify-content: space-between;
@@ -24,15 +26,20 @@
 }
 
 .back-button {
-  background-color: #28a745; 
-  color: white; 
-  border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+
+.back-button:hover {
+    background-color: #218838;
+}
+
 .search-input,
 .filter-select {
     padding: 10px 15px;
@@ -61,6 +68,7 @@
     background-color: #1976d2;
 }
 
+/* =================== Tabla =================== */
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -87,10 +95,6 @@
     font-size: 0.95em;
 }
 
-.data-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
 .user-info {
     display: flex;
     align-items: center;
@@ -114,17 +118,8 @@
     text-align: center;
 }
 
-.status-badge.available {
-    /* Activo */
-    background-color: #e8f5e9;
-    color: #4CAF50;
-}
-
-.status-badge.occupied {
-    /* Inactivo */
-    background-color: #ffebee;
-    color: #f44336;
-}
+.status-badge.available { background-color: #e8f5e9; color: #4CAF50; }
+.status-badge.occupied { background-color: #ffebee; color: #f44336; }
 
 .btn-action {
     background: none;
@@ -136,19 +131,11 @@
     transition: color 0.2s ease;
 }
 
-.btn-action:hover {
-    color: #2196f3;
-}
+.btn-action:hover { color: #2196f3; }
+.btn-action.edit:hover { color: #ffc107; }
+.btn-action.delete:hover { color: #f44336; }
 
-.btn-action.edit:hover {
-    color: #ffc107;
-}
-
-.btn-action.delete:hover {
-    color: #f44336;
-}
-
-/* Estadísticas de Usuarios */
+/* =================== Estadísticas =================== */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -184,202 +171,52 @@
     margin: 0;
 }
 
-/* Responsividad */
+/* =================== Modal (funciona para tu JS modal) =================== */
+.modal {
+    display: none; /* oculto por defecto */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5); /* fondo oscuro semi-transparente */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 500px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.modal .close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal .close:hover {
+    color: #000;
+}
+
+/* =================== Responsividad =================== */
 @media (max-width: 768px) {
     .table-actions {
         flex-direction: column;
         align-items: flex-start;
     }
-
     .search-input,
-    .filter-select {
-        max-width: 100%;
-        width: 100%;
-    }
-
-    .data-table {
-        overflow-x: auto;
-        display: block;
-    }
-
-    .data-table thead,
-    .data-table tbody,
-    .data-table th,
-    .data-table td,
-    .data-table tr {
-        display: block;
-    }
-
-    .data-table thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-
-    .data-table tr {
-        border: 1px solid #f0f0f0;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        background-color: #fff;
-        padding: 15px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .data-table td {
-        border: none;
-        position: relative;
-        padding-left: 50%;
-        text-align: right;
-    }
-
-    .data-table td:before {
-        content: attr(data-label);
-        position: absolute;
-        left: 6px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        text-align: left;
-        font-weight: 600;
-        color: #777;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
+    .filter-select { width: 100%; max-width: 100%; }
+    .data-table { overflow-x: auto; display: block; }
+    .stats-grid { grid-template-columns: 1fr; }
 }
-
-.swal2-popup.swal2-modern{
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 24px 60px rgba(16,24,40,.15);
-  padding: 0;
-    max-width: 750px;   /* ancho máximo del modal */
-  width: 90%;  
-  overflow: hidden;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: #fff;
-}
-
-.swal2-modern .swal2-title{
-  margin: 0;
-  padding: 14px 16px;
-  text-align: left;
-  font-size: 1.0rem;
-  font-weight: 800;
-  border-bottom: 1px solid #eef0f2;
-  background: #fbfcfd;
-  color: #111827;
-}
-
-/* Tamaño del contenido del modal (ajusta width si lo quieres más chico/grande) */
-.swal2-modern .swal2-html-container{
-  padding: 12px 14px;
-  margin: 0;
-  width: 720px; /* <— cambia a 640px o 600px si lo quieres más compacto */
-  max-width: calc(100vw - 32px);
-}
-
-/* Acciones (botones abajo) */
-.swal2-modern .swal2-actions{
-  margin: 0;
-  padding: 10px 14px;
-  border-top: 1px solid #eef0f2;
-  background: #fbfcfd;
-  justify-content: flex-end; /* centra => 'center' si lo prefieres */
-  gap: 8px;
-}
-.swal2-modern .swal2-styled{
-  border-radius: 10px !important;
-  padding: 8px 12px !important;
-  font-weight: 800 !important;
-}
-.swal2-modern .swal2-styled.swal2-confirm{
-  background: #22c55e !important;
-}
-.swal2-modern .swal2-styled.swal2-confirm:hover{
-  background: #16a34a !important;
-}
-.swal2-modern .swal2-styled.swal2-cancel{
-  background: #fff !important;
-  color: #1f2937 !important;
-  border: 1px solid #e5e7eb !important;
-}
-.swal2-modern .swal2-styled.swal2-cancel:hover{
-  background: #f9fafb !important;
-}
-
-/* ====== Grid del formulario dentro del modal ====== */
-.swal2-modern .swal2-grid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  text-align: left;
-}
-.swal2-modern .swal2-grid.compact{
-  grid-template-columns: 1fr 1fr;  /* 2 columnas compactas */
-  gap: 10px;
-}
-.swal2-modern .swal2-grid .full{ grid-column: 1 / -1; }
-
-/* Campos compactos */
-.swal2-modern .fg{ display:flex; flex-direction:column; gap:6px; }
-.swal2-modern .fg label{ font-size:.84rem; font-weight:700; color:#374151; }
-.swal2-modern .input{
-  background:#fff; color:#1f2937;
-  border:1px solid #e5e7eb; border-radius:10px;
-  padding:8px 10px; height:38px; outline:none;
-  transition:border-color .15s ease, box-shadow .15s ease;
-}
-.swal2-modern .textarea{
-  background:#fff; color:#1f2937;
-  border:1px solid #e5e7eb; border-radius:10px;
-  padding:10px 12px; min-height:84px; resize:vertical; outline:none;
-  transition:border-color .15s ease, box-shadow .15s ease;
-}
-.swal2-modern .input:focus,
-.swal2-modern .textarea:focus{
-  border-color:#bfdbfe;
-  box-shadow:0 0 0 3px rgba(37,99,235,.12);
-}
-
-/* ====== (Opcional) Soporte para avatar (Clientes) ====== */
-.swal2-modern .avatar-col{
-  grid-row: 1 / span 3;
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-}
-.swal2-modern .avatar-preview{
-  width: 88px; height: 88px; border-radius: 999px; overflow:hidden;
-  border: 2px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,.05);
-}
-.swal2-modern .avatar-preview img{
-  width:100%; height:100%; object-fit:cover; display:block;
-}
-.swal2-modern .upload-btn{
-  display:inline-flex; align-items:center; gap:6px;
-  background:#f3f4f6; color:#111827; border:1px solid #e5e7eb;
-  border-radius:999px; padding:6px 10px; cursor:pointer; font-weight:700;
-}
-.swal2-modern .upload-btn:hover{ background:#eef2f7; }
-.swal2-modern .hint{ color:#6b7280; font-size:.72rem; }
-
-/* ====== Animaciones (sutiles) ====== */
-.swal2-show.swal2-modern{ animation: modalIn .18s ease-out both; }
-.swal2-hide.swal2-modern{ animation: modalOut .12s ease-in both; }
-@keyframes modalIn{
-  from{ opacity:0; transform: translateY(6px) scale(.985); }
-  to  { opacity:1; transform: translateY(0)    scale(1); }
-}
-@keyframes modalOut{
-  from{ opacity:1; transform: translateY(0)    scale(1); }
-  to  { opacity:0; transform: translateY(6px) scale(.985); }
-}
-
-/* ====== Responsive ====== */
-@media (max-width: 760px){
-  .swal2-modern .swal2-html-container{ width: auto; }
-  .swal2-modern .swal2-grid,
-  .swal2-modern .swal2-grid.compact{ grid-template-columns: 1fr; }
-  .swal2-modern .swal2-grid .full{ grid-column: 1 / -1; }
-}
-
