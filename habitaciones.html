@@ -1,183 +1,136 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finder Hotel - Gestión de Habitaciones</title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Finder Hotel - Gestión de Habitaciones</title>
 
-    <link rel="stylesheet" href="css/style.css  ">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/habitaciones.css">
+  <!-- SweetAlert2 (para modales CRUD) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Fuentes / Iconos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+  <!-- Estilos del proyecto -->
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/dashboard.css"/>
+  <link rel="stylesheet" href="css/habitaciones.css"/>
 </head>
 
 <body>
-    <div class="main-layout">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo">
-                <h3>Finder Hotel</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li class="nav-item active"><a href="habitaciones.html"><i class="fas fa-bed"></i> Habitaciones</a>
-                    </li>
-                    <li class="nav-item"><a href="reservas.html"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
-                    <li class="nav-item"><a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a></li>
-                    <li class="nav-item"><a href="clientes.html"><i class="fas fa-user-friends"></i> Clientes</a></li>
-                    <li class="nav-item"><a href="checkin-checkout.html"><i class="fas fa-exchange-alt"></i>
-                            Check-in/Check-out</a></li>
-                    <li class="nav-item"><a href="mantenimientos.html"><i class="fas fa-tools"></i> Mantenimiento</a>
-                    </li>
-                    <li class="nav-item"><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
-                </ul>
-            </nav>
-            <div class="sidebar-footer">
-                <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
-                <div class="sidebar-user-profile">
-                    <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar">
-                    <div class="sidebar-user-details">
-                        <span class="sidebar-user-name">Adriana Montoya</span>
-                        <span class="sidebar-user-email">adriana@finder.com</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
-        <main class="content">
-            <header class="top-header">
-                <div class="company-name">Finder Hotel</div>
-                <div class="user-profile-header">
-                    <img src="assets/images/user-avatar.jpg" alt="User Avatar">
-                    <span>Adriana Montoya</span>
-                </div>
-            </header>
-            <div class="page-content-wrapper">
-                <div class="page-main-header">
-                    <h2>Gestión de Habitaciones</h2>
-                    <button class="back-button"><i class="fas fa-plus"></i> Nueva Habitación</button>
-                </div>
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo"/>
+        <h3>Finder Hotel</h3>
+      </div>
 
-            <section class="section-card">
-            <h3>Estado General de Habitaciones</h3>
-            <div class="room-status-overview">
-                <div class="status-box available">
-                <h4>Disponibles</h4>
-                <p><span id="countAvailable">0</span></p>
-                </div>
-                <div class="status-box occupied">
-                <h4>Ocupadas</h4>
-                <p><span id="countOccupied">0</span></p>
-                </div>
-                <div class="status-box cleaning">
-                <h4>Limpieza</h4>
-                <p><span id="countCleaning">0</span></p>
-                </div>
-                <div class="status-box maintenance">
-                <h4>Mantenimiento</h4>
-                <p><span id="countMaintenance">0</span></p>
-                </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+          <li class="nav-item active"><a href="habitaciones.html"><i class="fas fa-bed"></i> Habitaciones</a></li>
+          <li class="nav-item"><a href="reservas.html"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+          <li class="nav-item"><a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a></li>
+          <li class="nav-item"><a href="clientes.html"><i class="fas fa-user-friends"></i> Clientes</a></li>
+          <li class="nav-item"><a href="checkin-checkout.html"><i class="fas fa-exchange-alt"></i> Check-in/Check-out</a></li>
+          <li class="nav-item"><a href="mantenimientos.html"><i class="fas fa-tools"></i> Mantenimiento</a></li>
+          <li class="nav-item"><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
+        <div class="sidebar-user-profile">
+          <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar"/>
+          <div class="sidebar-user-details">
+            <span class="sidebar-user-name">Adriana Montoya</span>
+            <span class="sidebar-user-email">adriana@finder.com</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="top-header">
+        <div class="company-name">Finder Hotel</div>
+        <div class="user-profile-header">
+          <img src="assets/images/user-avatar.jpg" alt="User Avatar"/>
+          <span>Adriana Montoya</span>
+        </div>
+      </header>
+
+      <div class="page-content-wrapper">
+        <div class="page-main-header">
+          <h2>Gestión de Habitaciones</h2>
+          <!-- Botón que el controller engancha para abrir el modal de NUEVA -->
+          <button class="back-button"><i class="fas fa-plus"></i> Nueva Habitación</button>
+        </div>
+
+        <!-- Contadores (el controller actualiza estos spans) -->
+        <section class="section-card">
+          <h3>Estado General de Habitaciones</h3>
+          <div class="room-status-overview">
+            <div class="status-box available">
+              <h4>Disponibles</h4>
+              <p><span id="countAvailable">0</span></p>
             </div>
-            </section>
-                <section class="section-card">
-                    <h3>Listado de Habitaciones</h3>
-                    <div class="table-actions">
-                        <input type="text" placeholder="Buscar habitación por número o tipo..." class="search-input">
-                        <select class="filter-select">
-                            <option value="">Todas</option>
-                            <option value="disponible">Disponible</option>
-                            <option value="ocupada">Ocupada</option>
-                            <option value="limpieza">Limpieza</option>
-                            <option value="mantenimiento">Mantenimiento</option>
-                        </select>
-                        <button class="btn-export"><i class="fas fa-download"></i> Exportar</button>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Nº Habitación</th>
-                                <th>Tipo</th>
-                                <th>Capacidad</th>
-                                <th>Precio/Noche</th>
-                                <th>Estado</th>
-                                <th>Próxima Salida</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>101</td>
-                                <td>Doble</td>
-                                <td>2</td>
-                                <td>$80.00</td>
-                                <td><span class="status-badge occupied">Ocupada</span></td>
-                                <td>23/07/2025</td>
-                                <td>
-                                    <button class="btn-action"><i class="fas fa-eye"></i></button>
-                                    <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>102</td>
-                                <td>Doble Superior</td>
-                                <td>3</td>
-                                <td>$100.00</td>
-                                <td><span class="status-badge available">Disponible</span></td>
-                                <td>-</td>
-                                <td>
-                                    <button class="btn-action"><i class="fas fa-eye"></i></button>
-                                    <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>201</td>
-                                <td>Simple</td>
-                                <td>1</td>
-                                <td>$60.00</td>
-                                <td><span class="status-badge cleaning">Limpieza</span></td>
-                                <td>-</td>
-                                <td>
-                                    <button class="btn-action"><i class="fas fa-eye"></i></button>
-                                    <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>202</td>
-                                <td>Suite</td>
-                                <td>4</td>
-                                <td>$150.00</td>
-                                <td><span class="status-badge available">Disponible</span></td>
-                                <td>-</td>
-                                <td>
-                                    <button class="btn-action"><i class="fas fa-eye"></i></button>
-                                    <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-                            </tr>
-                            <tr>
-                                <td>305</td>
-                                <td>Doble</td>
-                                <td>2</td>
-                                <td>$80.00</td>
-                                <td><span class="status-badge maintenance">Mantenimiento</span></td>
-                                <td>-</td>
-                                <td>
-                                    <button class="btn-action"><i class="fas fa-eye"></i></button>
-                                    <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+            <div class="status-box occupied">
+              <h4>Ocupadas</h4>
+              <p><span id="countOccupied">0</span></p>
             </div>
-        </main>
-    </div>
-    <script src="#"></script>
-    <script src="js/habitaciones.js"></script>
+            <div class="status-box cleaning">
+              <h4>Limpieza</h4>
+              <p><span id="countCleaning">0</span></p>
+            </div>
+            <div class="status-box maintenance">
+              <h4>Mantenimiento</h4>
+              <p><span id="countMaintenance">0</span></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tabla + acciones (el controller pinta el tbody y usa los controles) -->
+        <section class="section-card">
+          <h3>Listado de Habitaciones</h3>
+
+          <div class="table-actions">
+            <input type="text" placeholder="Buscar habitación por número o tipo..." class="search-input"/>
+            <select class="filter-select">
+              <option value="">Todas</option>
+              <option value="disponible">Disponible</option>
+              <option value="ocupada">Ocupada</option>
+              <option value="limpieza">Limpieza</option>
+              <option value="mantenimiento">Mantenimiento</option>
+            </select>
+            <button class="btn-export"><i class="fas fa-download"></i> Exportar</button>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nº Habitación</th>
+                <th>Tipo</th>
+                <th>Capacidad</th>
+                <th>Precio/Noche</th>
+                <th>Estado</th>
+                <th>Próxima Salida</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Placeholder correcto -->
+              <tr><td colspan="7">Cargando . . .</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Controller (importa el service adentro con ES Modules) -->
+  <script type="module" src="js/Controller/ControllerHabitaciones.js"></script>
 </body>
-
 </html>

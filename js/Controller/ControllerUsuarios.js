@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const fila = `
         <tr>
-          <td class="user-info"><img src="img/default.png" class="user-avatar-small"> ${nombre}</td>
           <td>${correo}</td>
           <td>${rol}</td>
           <td>${estadoBadge}</td>

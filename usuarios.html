@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finder Hotel - Gestión de Usuarios</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -63,6 +66,32 @@
                 </div>
 
                 <section class="section-card">
+                    <h3>Estadísticas de Usuarios</h3>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <h4>Total Empleados</h4>
+                            <p>50</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Administradores</h4>
+                            <p>5</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Recepcionistas</h4>
+                            <p>15</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Personal de Limpieza</h4>
+                            <p>20</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Personal de Mantenimiento</h4>
+                            <p>10</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-card">
                     <h3>Listado de Empleados</h3>
                     <div class="table-actions">
                         <input type="text" placeholder="Buscar por nombre o rol..." class="search-input">
@@ -93,36 +122,11 @@
                     </table>
                 </section>
 
-                <section class="section-card">
-                    <h3>Estadísticas de Usuarios</h3>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <h4>Total Empleados</h4>
-                            <p>50</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Administradores</h4>
-                            <p>5</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Recepcionistas</h4>
-                            <p>15</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Personal de Limpieza</h4>
-                            <p>20</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Personal de Mantenimiento</h4>
-                            <p>10</p>
-                        </div>
-                    </div>
-                </section>
-
+                
             </div>
         </main>
     </div>
-    <script type="module" src="js/Controller/ControllerUsuarios.js"></script>
+<script type="module" src="js/Controller/ControllerUsuarios.js"></script>
 
     <script src="js/cerrar sesion.js"></script>
 </body>
