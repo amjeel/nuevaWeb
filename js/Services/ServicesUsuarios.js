@@ -16,8 +16,8 @@ export async function createUsuario(data) {
     return res.json();
 }
 
-export async function updateUsuario(idUsuario, data) {
-    const res = await fetch(`${API_URL}/actualizarUsuarios/${idUsuario}`, {
+export async function updateUsuario(id, data) {
+    const res = await fetch(`${API_URL}actualizarUsuarios/${id}`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
@@ -26,8 +26,8 @@ export async function updateUsuario(idUsuario, data) {
     return res.json();
 }
 
-export async function deleteUsuario(idUsuario) {
-    const res = await fetch(`${API_URL}/eliminarUsuarios/${idUsuario}`, {
+export async function deleteUsuario(id) {
+    const res = await fetch(`${API_URL}/eliminarUsuarios/${id}`, {
         method: "DELETE"
     }); 
     if (!res.ok) throw new Error("Error al eliminar usuario");
