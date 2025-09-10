@@ -18,12 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const $countClean  = document.getElementById("countCleaning");
   const $countMaint  = document.getElementById("countMaintenance");
 
-  // --- SOLO para estados del modal ---
+  // --- Config API ---
   const API_URL = "http://localhost:8080/api";
   const ENDPOINT_ESTADOS = `${API_URL}/consultarEstadosHabitacion`;
-  let ESTADOS = []; // {idEstadoHabitacion, nombreEstadoHabitacion}
+  const ENDPOINT_TIPOS   = `${API_URL}/consultarTiposHabitacion`; // ← FIX
 
-  // ------- Estado -------
+  // Catálogos
+  let ESTADOS = []; // [{idEstadoHabitacion, nombreEstadoHabitacion}, ...]
+  let TIPOS   = []; // [{idTipoHabitacion, nombreTipoHabitacion}, ...]
+
+  // Estado local
   let DATA = [];
 
   // ------- Utils -------
@@ -53,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (s.includes("ocup")) return "ocupada";
     if (s.includes("limp")) return "limpieza";
     if (s.includes("manten")) return "mantenimiento";
+    // soporta posibles IDs numéricos
     if (val === 1 || s === "1") return "disponible";
     if (val === 2 || s === "2") return "ocupada";
     if (val === 3 || s === "3") return "limpieza";
@@ -69,22 +74,73 @@ document.addEventListener("DOMContentLoaded", () => {
     return `<span class="status-badge other">${estadoTxt || "-"}</span>`;
   };
 
+  // ------- Catálogos -------
+  async function loadEstados(){
+    try{
+      const res = await fetch(ENDPOINT_ESTADOS);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.json();
+      ESTADOS = normalizeList(raw);
+    }catch(err){
+      console.error("Error cargando estados:", err);
+      ESTADOS = [];
+    }
+  }
+
+  async function loadTipos() {
+    try{
+      const res = await fetch (ENDPOINT_TIPOS);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.json();
+      TIPOS = normalizeList(raw);
+    }catch(err){
+      console.error("Error cargando tipos:", err);
+      TIPOS = [];
+    }
+  }
+
+  const optionsEstados = (selectedId=null) =>
+    ESTADOS.map(x => {
+      const id   = x.idEstadoHabitacion ?? x.id ?? "";
+      const name = x.nombreEstadoHabitacion ?? x.nombre ?? "";
+      const sel  = String(id) === String(selectedId) ? "selected" : "";
+      return `<option value="${id}" ${sel}>${name}</option>`;
+    }).join("");
+
+  const optionsTipos = (selectedId=null) =>
+    TIPOS.map(x => {
+      const id   = x.idTipoHabitacion ?? x.id ?? "";
+      const name = x.nombreTipoHabitacion ?? x.nombre ?? "";
+      const sel  = String(id) === String(selectedId) ? "selected" : "";
+      return `<option value="${id}" ${sel}>${name}</option>`;
+    }).join("");
+
+  const tipoNombreById = (id) => {
+    const t = TIPOS.find(x => String(x.idTipoHabitacion ?? x.id) === String(id));
+    return t?.nombreTipoHabitacion ?? t?.nombre ?? "-";
+  };
+
+  const estadoNombreById = (id) => {
+    const e = ESTADOS.find(x => String(x.idEstadoHabitacion ?? x.id) === String(id));
+    return e?.nombreEstadoHabitacion ?? e?.nombre ?? id ?? "-";
+  };
+
   // ------- Render -------
   const renderRow = (h) => {
-    const id   = h.idHabitacion ?? h.id ?? "";
-    const num  = h.numeroHabitacion ?? h.numero ?? "";
-    // MOSTRAR nombre de la habitación en la col "Tipo"
-    const nombreHab = h.nombreHabitacion ?? h.nombre ?? "-";
-    const cap  = h.capacidadHabitacion ?? h.capacidad ?? "-";
-    const prec = h.precioHabitacion ?? h.precio ?? 0;
-    const est  = h.nombreEstadoHabitacion ?? h.estadoNombre ?? h.estado ?? h.idEstadoHabitacion ?? "";
-    const out  = h.proximaSalida ?? h.fechaSalida ?? "-";
+    const id    = h.idHabitacion ?? h.id ?? "";
+    const num   = h.numeroHabitacion ?? h.numero ?? "";
+    const idTipo= h.idTipoHabitacion ?? h.tipoId ?? null;
+    const tipoN = h.nombreTipoHabitacion ?? h.tipoNombre ?? (idTipo ? tipoNombreById(idTipo) : "-"); // ← mostrar TIPO
+    const cap   = h.capacidadHabitacion ?? h.capacidad ?? "-";
+    const prec  = h.precioHabitacion ?? h.precio ?? 0;
+    const est   = h.nombreEstadoHabitacion ?? h.estadoNombre ?? h.estado ?? h.idEstadoHabitacion ?? "";
+    const out   = h.proximaSalida ?? h.fechaSalida ?? "-";
 
     const tr = document.createElement("tr");
     tr.dataset.idHabitacion = id;
     tr.innerHTML = `
       <td class="room-number">${num}</td>
-      <td>${nombreHab}</td>
+      <td>${tipoN}</td>
       <td>${cap}</td>
       <td>$${money(prec)}</td>
       <td>${statusBadge(est)}</td>
@@ -129,9 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
     Array.from(tbody.querySelectorAll("tr")).forEach(tr=>{
       const tds = tr.querySelectorAll("td");
       const numero = norm(tds[0]?.textContent || "");
-      const nombre = norm(tds[1]?.textContent || ""); // ahora busca por nombre
+      const tipo   = norm(tds[1]?.textContent || "");
       const estado = norm(tds[4]?.textContent || "");
-      const okQ = !q || numero.includes(q) || nombre.includes(q);
+      const okQ = !q || numero.includes(q) || tipo.includes(q);
       const okF = !f || estado.includes(f);
       tr.style.display = (okQ && okF) ? "" : "none";
     });
@@ -143,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnExport?.addEventListener("click", ()=>{
     const rows = Array.from(tbody.querySelectorAll("tr")).filter(tr=>tr.style.display!=="none");
     if (!rows.length) return toast("info","No hay datos para exportar");
-    const headers = ["Nº Habitación","Nombre","Capacidad","Precio/Noche","Estado","Próxima Salida"];
+    const headers = ["Nº Habitación","Tipo","Capacidad","Precio/Noche","Estado","Próxima Salida"];
     const csv = [headers.join(",")];
     rows.forEach(tr=>{
       const t = tr.querySelectorAll("td");
@@ -163,25 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
     toast("success","CSV exportado");
   });
 
-  // ------- Estados (combo modal) -------
-  async function loadEstados(){
-    try{
-      const res = await fetch(ENDPOINT_ESTADOS);
-      const raw = await res.json();
-      ESTADOS = normalizeList(raw);
-    }catch(err){
-      console.error("Error cargando estados:", err);
-      ESTADOS = [];
-    }
-  }
-  const optionsEstados = (selectedId=null) =>
-    ESTADOS.map(x => {
-      const id = x.idEstadoHabitacion ?? x.id ?? "";
-      const name = x.nombreEstadoHabitacion ?? x.nombre ?? "Sin nombre";
-      const sel = String(id) === String(selectedId) ? "selected" : "";
-      return `<option value="${id}" ${sel}>${name}</option>`;
-    }).join("");
-
   // ------- Modal (SweetAlert2) -------
   const modalHtml = (vals = {}) => `
     <div class="swal2-grid compact" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left">
@@ -189,15 +226,20 @@ document.addEventListener("DOMContentLoaded", () => {
         <label>Nº Habitación</label>
         <input id="h-numero" class="input" type="number" min="1" placeholder="101" value="${vals.numero ?? ""}">
       </div>
+
       <div class="fg">
-        <label>Nombre de la habitación</label>
-        <input id="h-nombre" class="input" placeholder="Ej. Suite Ejecutiva" value="${vals.nombre ?? ""}">
+        <label>Tipo de Habitación</label>
+        <select id="h-tipo" class="input">
+          <option value="">Seleccione...</option>
+          ${optionsTipos(vals.idTipoHabitacion)}
+        </select>
       </div>
 
       <div class="fg">
         <label>Capacidad</label>
         <input id="h-cap" class="input" type="number" min="1" placeholder="2" value="${vals.capacidad ?? ""}">
       </div>
+
       <div class="fg">
         <label>Precio por noche</label>
         <input id="h-precio" class="input" type="number" step="0.01" min="0" placeholder="80.00" value="${vals.precio ?? ""}">
@@ -220,46 +262,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const readModal = () => {
     const num   = document.getElementById("h-numero").value.trim();
-    const nombre= document.getElementById("h-nombre").value.trim();
+    const tipo  = document.getElementById("h-tipo").value.trim();      // idTipoHabitacion
     const cap   = document.getElementById("h-cap").value.trim();
     const prec  = document.getElementById("h-precio").value.trim();
-    const est   = document.getElementById("h-estado").value;
+    const est   = document.getElementById("h-estado").value;           // idEstadoHabitacion
     const desc  = (document.getElementById("h-desc")?.value || "").trim();
 
-    if (!num || !nombre || !cap || !prec || !est) {
+    if (!num || !tipo || !cap || !prec || !est) {
       Swal.showValidationMessage("Completa todos los campos obligatorios.");
       return false;
     }
     return {
       numeroHabitacion: parseInt(num, 10),
-      nombreHabitacion: nombre,
+      idTipoHabitacion: tipo,
       capacidadHabitacion: parseInt(cap, 10),
       precioHabitacion: parseFloat(prec),
       idEstadoHabitacion: est,
       descripcionHabitacion: desc || null,
+      idHotel: 'F291EE7D90BE412F8C5EF9D04E552BAC'
     };
   };
 
   async function createDialog(){
+    // asegura catálogos cargados para el combo
+    await Promise.all([loadTipos(), loadEstados()]);
     const { value } = await Swal.fire({
       title:"Nueva Habitación",
       html: modalHtml(),
       focusConfirm:false, showCancelButton:true,
       confirmButtonText:"Guardar", cancelButtonText:"Cancelar",
       customClass: { popup: "swal2-modern" },
-      preConfirm: readModal
+      preConfirm: readModal,
+      didOpen: () => {
+        // si necesitas rehacer combos tras cargar catálogos
+        const tipoSel = document.getElementById("h-tipo");
+        const estSel  = document.getElementById("h-estado");
+        if (tipoSel && !tipoSel.children.length) tipoSel.innerHTML = `<option value="">Seleccione...</option>${optionsTipos()}`;
+        if (estSel  && !estSel.children.length)  estSel.innerHTML  = `<option value="">Seleccione...</option>${optionsEstados()}`;
+      }
     });
-    return value || null;
+    if (!value) return null;
+
+    // Si necesitas setear hotel fijo:
+     value.idHotel = 'F291EE7D90BE412F8C5EF9D04E552BAC';
+    return value;
   }
 
   async function editDialog(current){
+    await Promise.all([loadTipos(), loadEstados()]);
     const vals = {
       numero:  current.numeroHabitacion ?? current.numero ?? "",
-      nombre:  current.nombreHabitacion ?? current.nombre ?? "",
       capacidad: current.capacidadHabitacion ?? current.capacidad ?? "",
       precio:    current.precioHabitacion ?? current.precio ?? "",
+      idTipoHabitacion: current.idTipoHabitacion ?? "",
       idEstadoHabitacion: current.idEstadoHabitacion ?? "",
-      desc: current.descripcionHabitacion ?? current.descripcion ?? "",
+      desc: current.descripcionHabitacion ?? current.descripcion ?? ""
     };
     const { value } = await Swal.fire({
       title:`Editar Habitación ${vals.numero || ""}`,
@@ -267,9 +324,18 @@ document.addEventListener("DOMContentLoaded", () => {
       focusConfirm:false, showCancelButton:true,
       confirmButtonText:"Guardar", cancelButtonText:"Cancelar",
       customClass: { popup: "swal2-modern" },
-      preConfirm: readModal
+      preConfirm: readModal,
+      didOpen: () => {
+        // forzar relleno por si el HTML se pintó antes de que llegaran los catálogos
+        const tipoSel = document.getElementById("h-tipo");
+        const estSel  = document.getElementById("h-estado");
+        if (tipoSel) tipoSel.innerHTML = `<option value="">Seleccione...</option>${optionsTipos(vals.idTipoHabitacion)}`;
+        if (estSel)  estSel.innerHTML  = `<option value="">Seleccione...</option>${optionsEstados(vals.idEstadoHabitacion)}`;
+      }
     });
-    return value || null;
+    if (!value) return null;
+    value.idHotel = 'F291EE7D90BE412F8C5EF9D04E552BAC';
+    return value;
   }
 
   // ------- CRUD -------
@@ -278,6 +344,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try{
       const raw = await getHabitaciones();
       DATA = normalizeList(raw);
+
+      // asegúrate de tener catálogos para pintar nombres
+      await Promise.all([loadTipos(), loadEstados()]);
+
       renderTabla(DATA);
       contarEstados(DATA);
       applyFilters();
@@ -290,10 +360,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnNueva?.addEventListener("click", async () => {
     try{
-      await loadEstados();               // ← llena el select de estados
       const payload = await createDialog();
       if (!payload) return;
-
       await createHabitaciones(payload);
       toast("success","Habitación creada");
       await loadHabitaciones();
@@ -330,7 +398,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btn.classList.contains("edit")){
       try{
-        await loadEstados(); // para el select de estados
         const current = DATA.find(x => String(x.idHabitacion ?? x.id) === String(id));
         if (!current) return;
         const payload = await editDialog(current);
