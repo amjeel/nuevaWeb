@@ -64,19 +64,13 @@
       <div class="page-content-wrapper">
         <div class="page-main-header">
           <h2>Gestión de Clientes</h2>
-          <button class="back-button"><i class="fas fa-plus"></i> Nuevo Cliente</button>
+          <button id="btn-abrir" class="back-button"><i class="fas fa-plus"></i> Nuevo Cliente</button>
         </div>
 
         <section class="section-card">
           <h3>Listado de Clientes</h3>
           <div class="table-actions">
             <input type="text" placeholder="Buscar por nombre" class="search-input">
-            <select class="filter-select">
-              <option value="">Todos los Tipos</option>
-              <option value="frecuente">Frecuente</option>
-              <option value="nuevo">Nuevo</option>
-              <option value="vip">VIP</option>
-            </select>
             <button class="btn-export"><i class="fas fa-download"></i> Exportar</button>
           </div>
 
@@ -86,9 +80,6 @@
                 <th>Nombre Completo</th>
                 <th>Email</th>
                 <th>Teléfono</th>
-                <th>Última Reserva</th>
-                <th>Tipo de Cliente</th>
-                <th>Acciones</th>
               </tr>
             </thead>
             <tbody id="tbClientes"><!-- JS inserta filas --></tbody>
@@ -99,7 +90,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/clientes.js"></script>
+  <script type="module" src="js/Controller/ControllerClientes.js"></script>
   <script src="js/cerrar sesion.js"></script>
 </body>
 </html>

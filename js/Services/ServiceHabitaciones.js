@@ -1,5 +1,5 @@
 // js/Services/ServiceHabitaciones.js
-const API_URL = "http://localhost:8080/api"; // sin / al final
+const API_URL = "http://localhost:8080/api"; 
 
 export async function getHabitaciones() {
   const res = await fetch(`${API_URL}/consultarHabitaciones`, {

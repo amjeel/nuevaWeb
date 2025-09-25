@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnExport?.addEventListener("click", ()=>{
     const rows = Array.from(tbody.querySelectorAll("tr")).filter(tr=>tr.style.display!=="none");
     if (!rows.length) return toast("info","No hay datos para exportar");
-    const headers = ["Nº Habitación","Tipo","Capacidad","Precio/Noche","Estado","Próxima Salida"];
+    const headers = ["Nº Habitación","Tipo","Capacidad","Precio/Noche","Estado"];
     const csv = [headers.join(",")];
     rows.forEach(tr=>{
       const t = tr.querySelectorAll("td");

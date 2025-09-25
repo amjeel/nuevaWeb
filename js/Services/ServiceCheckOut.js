@@ -9,7 +9,7 @@ export async function getCheckOut() {
   return res.json();
 }
 
-export async function CreateCheckOut(data) {
+export async function createCheckOut(data) {
   const res = await fetch(`${API_URL}/registrarCheckOuts`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
