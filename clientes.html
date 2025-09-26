@@ -25,25 +25,27 @@
   <div class="main-layout">
     <aside class="sidebar">
       <div class="sidebar-header">
-        <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo">
+        <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo"/>
         <h3>Finder Hotel</h3>
       </div>
+
       <nav class="sidebar-nav">
         <ul>
           <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
           <li class="nav-item"><a href="habitaciones.html"><i class="fas fa-bed"></i> Habitaciones</a></li>
           <li class="nav-item"><a href="reservas.html"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
-          <li class="nav-item"><a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a></li>
+          <li class="nav-item"><a href="empleados.html"><i class="fas fa-users"></i> Empleados</a></li>
           <li class="nav-item active"><a href="clientes.html"><i class="fas fa-user-friends"></i> Clientes</a></li>
           <li class="nav-item"><a href="checkin-checkout.html"><i class="fas fa-exchange-alt"></i> Check-in/Check-out</a></li>
           <li class="nav-item"><a href="mantenimientos.html"><i class="fas fa-tools"></i> Mantenimiento</a></li>
           <li class="nav-item"><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
         </ul>
       </nav>
+
       <div class="sidebar-footer">
         <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
         <div class="sidebar-user-profile">
-          <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar">
+          <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar"/>
           <div class="sidebar-user-details">
             <span class="sidebar-user-name">Adriana Montoya</span>
             <span class="sidebar-user-email">adriana@finder.com</span>
@@ -56,7 +58,7 @@
       <header class="top-header">
         <div class="company-name">Finder Hotel</div>
         <div class="user-profile-header">
-          <img src="assets/images/user-avatar.jpg" alt="User Avatar">
+          <img src="assets/images/user-avatar.jpg" alt="User Avatar"/>
           <span>Adriana Montoya</span>
         </div>
       </header>
@@ -64,25 +66,33 @@
       <div class="page-content-wrapper">
         <div class="page-main-header">
           <h2>Gestión de Clientes</h2>
-          <button id="btn-abrir" class="back-button"><i class="fas fa-plus"></i> Nuevo Cliente</button>
+          <!-- Botón que el controller engancha para abrir el modal de NUEVA -->
+          <button class="back-button"><i class="fas fa-plus"></i> Nueva Habitación</button>
         </div>
 
+        <!-- Tabla + acciones (el controller pinta el tbody y usa los controles) -->
         <section class="section-card">
           <h3>Listado de Clientes</h3>
+
           <div class="table-actions">
-            <input type="text" placeholder="Buscar por nombre" class="search-input">
+            <input type="text" placeholder="Buscar por nombre" class="search-input"/>
             <button class="btn-export"><i class="fas fa-download"></i> Exportar</button>
           </div>
 
           <table class="data-table">
             <thead>
               <tr>
-                <th>Nombre Completo</th>
-                <th>Email</th>
-                <th>Teléfono</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Identificacion</th>
+                <th>fecha de nacimiento</th>
+
               </tr>
             </thead>
-            <tbody id="tbClientes"><!-- JS inserta filas --></tbody>
+            <tbody>
+              <!-- Placeholder correcto -->
+              <tr><td colspan="7">Cargando . . .</td></tr>
+            </tbody>
           </table>
         </section>
       </div>
