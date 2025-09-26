@@ -1,9 +1,9 @@
 // js/Controller/ControllerReservas.js
 import {
   getReservas,
-  createReservas,   // ← plural
-  updateReservas,   // ← plural
-  deleteReservas    // ← plural
+  createReservas,   
+  updateReservas,   
+  deleteReservas    
 } from "../Services/ServiceReservas.js";
 
 document.addEventListener("DOMContentLoaded", () => {

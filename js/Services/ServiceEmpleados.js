@@ -1,11 +1,11 @@
 const API_URL = "http://localhost:8080/api"; 
 
-export async function getUsuarios(){
+export async function getEmpleados(){
   const res = await fetch(`${API_URL}/consultarUsuarios`);
   return res.json();
 }
  
-export async function createUsuarios(data){
+export async function createEmpleados(data){
     await fetch(`${API_URL}/registrarUsuarios`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -13,7 +13,7 @@ export async function createUsuarios(data){
     });
 }
  
-export async function updateUsuarios(id, data){
+export async function updateEmpleados(id, data){
     await fetch(`${API_URL}/actualizarUsuarios/${id}`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
@@ -21,7 +21,7 @@ export async function updateUsuarios(id, data){
     });
 }
  
-export async function deleteCategory(id){
+export async function deleteEmpleados(id){
     await fetch(`${API_URL}/eliminarUsuarios/${id}`, {
         method: "DELETE"
     });

@@ -1,13 +1,12 @@
 import {
-  getUsuarios,
-  createUsuarios,
-  updateUsuarios,
-  deleteUsuarios
-} from "../Services/ServicesUsuarios.js";
+  getEmpleados,
+  createEmpleados,
+  updateEmpleados,
+  deleteEmpleados
+} from "../Services/ServiceEmpleados.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const tableBody= document.querySelector("UsersTable tbody");
-  const form = document.getElementById("UsersForm");
+  const form = document.getElementById("EmpleadosForm");
   const modal = new bootstrap.Modal(document.getElementById("UsuariosModal"));
   const lbModal = document.getElementById("usersModalLable");
   const btnAdd = document.getElementById("btnaddUsuario");
@@ -28,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const data = {
       nombreUusuario: form.userName.value.trim(),
-      
+
     }
   })
 })
