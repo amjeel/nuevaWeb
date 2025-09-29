@@ -8,12 +8,12 @@ import {
 
 import {
   getCheckOut,
-  createCheckOut, 
+  createCheckOut,
   updateCheckOut,
   deleteCheckOut
 } from "../Services/ServiceCheckOut.js";
 
-/* ------------------------ SweetAlert ------------------------ */
+/* ------------------------ Utils & SweetAlert ------------------------ */
 function injectSwalStyles(){
   if (document.getElementById("swal-modern-check")) return;
   const st = document.createElement("style");
@@ -31,10 +31,21 @@ function injectSwalStyles(){
   `;
   document.head.appendChild(st);
 }
-const toast = (icon="success", title="") =>
-  Swal.fire({ toast:true, position:"bottom-end", icon, title, timer:1600, showConfirmButton:false });
 
-const normalizeList = (raw) => Array.isArray(raw) ? raw : (raw?.content || raw?.data || raw?.items || raw?.results || []);
+const norm = (s) => (s ?? "").toString().toLowerCase()
+  .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+const toast = (icon="success", title="") =>
+  Swal.fire({ toast:true, position:"bottom-end", icon, title, timer:1600, showConfirmButton:false, timerProgressBar:true });
+
+const normalizeList = (raw) => {
+  if (Array.isArray(raw)) return raw;
+  if (raw?.content) return raw.content;
+  if (raw?.data)    return raw.data;
+  if (raw?.items)   return raw.items;
+  if (raw?.results) return raw.results;
+  return [];
+};
 
 /* ------------------ Modal único Check-in / Check-out ------------------ */
 async function openCheckDialog(initialTipo="checkin", preset={}){
@@ -103,6 +114,7 @@ async function openCheckDialog(initialTipo="checkin", preset={}){
       notas:     g("op-notas"),
     };
   };
+
   const read = (t) => {
     const g = id => document.getElementById(id)?.value?.trim() ?? "";
     const reservaId = g("op-reserva");
@@ -110,10 +122,12 @@ async function openCheckDialog(initialTipo="checkin", preset={}){
     const habitacion= g("op-hab");
     const fechaHora = g("op-fecha");
     const notas     = g("op-notas");
+
     if (!reservaId || !huesped || !habitacion || !fechaHora) {
       Swal.showValidationMessage("Completa ID Reserva, Huésped, Habitación y Fecha/Hora.");
       return false;
     }
+
     const payload = {
       tipo: t,
       idReserva: reservaId,
@@ -122,6 +136,7 @@ async function openCheckDialog(initialTipo="checkin", preset={}){
       fechaHora,
       notas: notas || null,
     };
+
     if (t==="checkin") {
       payload.documentoVerificado = (document.getElementById("op-doc")?.value ?? "no") === "si";
     } else {
@@ -136,7 +151,6 @@ async function openCheckDialog(initialTipo="checkin", preset={}){
     return payload;
   };
 
-  // Re-render correcto al cambiar el tipo
   while (true) {
     let shouldRerender = false;
     const r = await Swal.fire({
@@ -174,18 +188,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tbodys = Array.from(document.querySelectorAll(".section-card .data-table tbody"));
   const [tbodyIn, tbodyOut, tbodyHist] = tbodys;
 
-  const histCard = tbodyHist.closest(".section-card");
+  const histCard = tbodyHist?.closest(".section-card");
   const searchInput  = histCard?.querySelector(".search-input");
-  const filterSelect = histCard?.querySelector(".filter-select");
+  const filterSelect = histCard?.querySelector(".filter-select"); // valores: "", "check-in", "check-out" en minúsculas
   const dateFilter   = histCard?.querySelector(".date-filter");
-  const norm = s => (s ?? "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 
-  const btnAbrir = document.getElementById("ModalOn") || document.querySelector(".back-button");
-
-  // Estado
+  // Estado local
   let IN = [], OUT = [], HIST = [];
 
-  // Map flexible según respuesta del backend
+  // Normalizadores (map) flexibles
   const asCheckIn  = (r) => ({
     id:      r.idCheckIn ?? r.id ?? r.checkinId ?? "",
     reserva: r.idReserva ?? r.reservaId ?? r.reserva ?? "",
@@ -201,7 +212,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     hora:    r.horaPrevista ?? r.fechaHora ?? r.hora ?? "-",
   });
 
-  // Render pendientes
+  /* ------------------------------- Render ------------------------------- */
   const renderPendientes = (data, tbody, isIn) => {
     tbody.innerHTML = data.length
       ? data.map(x => `
@@ -222,8 +233,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       : `<tr><td colspan="5">Sin pendientes</td></tr>`;
   };
 
-  // Render historial
   const renderHist = (data) => {
+    if (!tbodyHist) return;
     tbodyHist.innerHTML = data.length
       ? data.map(h => `
         <tr>
@@ -236,12 +247,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       : `<tr><td colspan="5">Sin movimientos</td></tr>`;
   };
 
-  // Cargas
+  /* ------------------------------- Loads ------------------------------- */
   async function loadIn(){
+    if (!tbodyIn) return;
     tbodyIn.innerHTML = `<tr><td colspan="5">Cargando . . .</td></tr>`;
     try{
-      const raw = await getCheckIn();
-      IN = normalizeList(raw).map(asCheckIn);
+      const raw  = await getCheckIn();
+      const json = (raw && typeof raw.json === "function") ? await raw.json() : raw;
+      IN = normalizeList(json).map(asCheckIn);
       renderPendientes(IN, tbodyIn, true);
     }catch(e){
       console.error(e);
@@ -249,10 +262,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
   async function loadOut(){
+    if (!tbodyOut) return;
     tbodyOut.innerHTML = `<tr><td colspan="5">Cargando . . .</td></tr>`;
     try{
-      const raw = await getCheckOut();
-      OUT = normalizeList(raw).map(asCheckOut);
+      const raw  = await getCheckOut();
+      const json = (raw && typeof raw.json === "function") ? await raw.json() : raw;
+      OUT = normalizeList(json).map(asCheckOut);
       renderPendientes(OUT, tbodyOut, false);
     }catch(e){
       console.error(e);
@@ -260,20 +275,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
   async function loadHist(){
-    const h1 = IN.map(x => ({ tipo:"Check-in",  huesped:x.huesped, hab:x.hab, fecha:x.hora, asist:"-" }));
-    const h2 = OUT.map(x => ({ tipo:"Check-out", huesped:x.huesped, hab:x.hab, fecha:x.hora, asist:"-" }));
+    // Si tu backend tiene historial real, reemplaza esta construcción local
+    const h1 = IN.map(x => ({ tipo:"check-in",  huesped:x.huesped, hab:x.hab, fecha:x.hora, asist:"-" }));
+    const h2 = OUT.map(x => ({ tipo:"check-out", huesped:x.huesped, hab:x.hab, fecha:x.hora, asist:"-" }));
     HIST = [...h1, ...h2].sort((a,b)=> String(b.fecha||"").localeCompare(String(a.fecha||"")));
     renderHist(HIST);
   }
 
-  // Filtros historial
+  /* ---------------------------- Filtros Hist ---------------------------- */
   function applyHistFilters(){
     const q = norm(searchInput?.value || "");
-    const t = (filterSelect?.value || "");
-    const d = (dateFilter?.value || "");
+    const t = (filterSelect?.value || "");      // "" | "check-in" | "check-out"
+    const d = (dateFilter?.value || "");        // YYYY-MM-DD
+
     const filtered = HIST.filter(h=>{
       const okQ = !q || norm(h.huesped).includes(q) || norm(h.hab).includes(q);
-      const okT = !t || h.tipo.toLowerCase() === t;
+      const okT = !t || (h.tipo.toLowerCase() === t);
       const okD = !d || (h.fecha && String(h.fecha).slice(0,10) === d);
       return okQ && okT && okD;
     });
@@ -283,8 +300,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   filterSelect?.addEventListener("change", applyHistFilters);
   dateFilter?.addEventListener("change", applyHistFilters);
 
-  // Acciones por fila (ver, editar, eliminar, confirmar)
+  /* -------------------------- Acciones por fila -------------------------- */
   function attachRowActions(tbody, isIn){
+    if (!tbody) return;
     tbody.addEventListener("click", async (e)=>{
       const btn = e.target.closest("button"); if (!btn) return;
       const tr = btn.closest("tr"); const id = tr?.dataset.id; if (!id) return;
@@ -320,8 +338,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (btn.classList.contains("delete")){
         const { isConfirmed } = await Swal.fire({
-          title:"¿Eliminar registro?", text:"Esta acción no se puede deshacer.",
-          icon:"warning", showCancelButton:true, confirmButtonText:"Sí, eliminar", cancelButtonText:"Cancelar"
+          title:"¿Eliminar registro?",
+          text:"Esta acción no se puede deshacer.",
+          icon:"warning", showCancelButton:true,
+          confirmButtonText:"Sí, eliminar", cancelButtonText:"Cancelar"
         });
         if (!isConfirmed) return;
         try {
@@ -342,16 +362,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Botón principal: abre modal y crea
+  /* --------------------------- Botón principal --------------------------- */
+  const btnAbrir = document.getElementById("ModalOn") || document.querySelector(".back-button");
   btnAbrir?.addEventListener("click", async (e)=>{
     e.preventDefault();
     const payload = await openCheckDialog("checkin"); // el usuario puede cambiar a "Check-out"
     if (!payload) return;
     try{
       if (payload.tipo === "checkin") {
-        await createCheckIn(payload); await loadIn();
+        await createCheckIn(payload);  await loadIn();
       } else {
-        await CreateCheckOut(payload); await loadOut(); // <- si usas createCheckOut en minúscula, cámbialo aquí
+        await createCheckOut(payload); await loadOut();
       }
       await loadHist();
       toast("success","Registro creado");
@@ -361,7 +382,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Init
+  /* -------------------------------- Init -------------------------------- */
   attachRowActions(tbodyIn,  true);
   attachRowActions(tbodyOut, false);
   await Promise.all([loadIn(), loadOut()]);

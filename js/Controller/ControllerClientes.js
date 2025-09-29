@@ -33,10 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const norm = (s) => (s ?? "").toString()
     .toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-  const money = (v) => {
-    const n = Number(String(v ?? "").replace(/[^\d.,-]/g, "").replace(",", "."));
-    return isNaN(n) ? "0.00" : n.toFixed(2);
-  };
 
   const toast = (icon="success", title="") =>
     Swal.fire({ toast:true, position:"bottom-end", icon, title, timer:1600, showConfirmButton:false, timerProgressBar:true });
@@ -50,14 +46,40 @@ document.addEventListener("DOMContentLoaded", () => {
     return [];
   };
 
+  async function loadUsuarios(){
+  try{
+    const res = await fetch(ENDPOINT_USUARIOS);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    USUARIOS = normalizeList(await res.json());
+  }catch(e){
+    console.error("Error cargando usuarios:", e);
+    USUARIOS = [];
+  }
+}
+
+  const optionsUsuarios = (selectedId=null) =>
+  USUARIOS.map(x => {
+    const id   = x.idUsuario ?? x.id ?? "";
+    const name = x.nombreUsuario ?? x.nameUser ?? "";
+    const sel  = String(id) === String(selectedId) ? "selected" : "";
+    return `<option value="${id}" ${sel}>${name}</option>`;
+  }).join("");
+
+
+const userNameById = (id) => {
+  const u = USUARIOS.find(x => String(x.idUsuario ?? x.id) === String(id));
+  return u?.nombreUsuario ?? u?.nameUser ?? "-";
+};
+
   // ------- Render -------
   const renderRow = (h) => {
     const id    = h.idCliente ?? h.id ?? "";
     const nom   = h.nombreCliente ?? h.nombre ?? "";
     const apell  = h.apellidoCliente ?? h.apellido ?? "";
-    const idUser = h.idUsuario ?? h.idUser ?? null;
     const dui   = h.duiCliente ?? h.duiC ?? "";
     const fechaNa   = h.nacimientoCliente ?? h.nacimiento ?? "";
+    const idUsuario = h.idUsuario ?? h.userId ?? "";
+    const userName  = h.nombreUsuario ?? h.nameUser ?? (idUsuario ? userNameById(idUsuario) : "-");
 
     const tr = document.createElement("tr");
     tr.dataset.idCliente = id;
@@ -149,6 +171,14 @@ document.addEventListener("DOMContentLoaded", () => {
          value="${vals.nacimiento ?? ""}" 
          required
          title="Debe ser una fecha válida y mayor de 18 años">
+
+         <div class="fg">
+  <label>Usuario</label>
+  <select id="c-usuario" class="input">
+    <option value="">Seleccione...</option>
+    ${optionsUsuarios(vals.idUsuario)}
+  </select>
+</div>
 </div>
    </div>
  `;
@@ -158,6 +188,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const apell  = document.getElementById("lastName-cliente").value.trim();
   const dui   = document.getElementById("c-dui").value.trim();
   const fechaNa  = document.getElementById("c-fechaNac").value.trim();
+  const idUsuarioSel = document.getElementById("c-usuario")?.value || "";
+  if (!idUsuarioSel) { Swal.showValidationMessage("Selecciona un usuario."); return false; }
+
 
   if (!nom || !apell || !dui || !fechaNa) {
     Swal.showValidationMessage("Completa todos los campos obligatorios.");
@@ -168,6 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
     apellidoCliente: apell,
     duiCliente: dui,
     nacimientoCliente: fechaNa,
+    idUsuario: idUsuarioSel
   };
 };
 
@@ -178,7 +212,14 @@ async function createDialog(){
     focusConfirm:false, showCancelButton:true,
     confirmButtonText:"Guardar", cancelButtonText:"Cancelar",
     customClass: { popup: "swal2-modern" },
-    preConfirm: readModal
+    preConfirm: readModal,
+    didOpen: async () => {
+      if (!USUARIOS.length) await loadUsuarios();
+      const uSel = document.getElementById("c-usuario");
+      if (uSel) {
+        uSel.innerHTML = `<option value="">Seleccione...</option>${optionsUsuarios()}`;
+      }
+    }
   });
   return value || null;
 }
@@ -188,7 +229,8 @@ async function editDialog(current){
     nombre:     current.nombreCliente ?? "",
     apellido:   current.apellidoCliente ?? "",
     dui:        current.duiCliente ?? "",
-    nacimiento: current.nacimientoCliente ?? ""
+    nacimiento: current.nacimientoCliente ?? "",
+    idUsuario:  current.idUsuario ?? ""
   };
 
   const { value } = await Swal.fire({
@@ -197,16 +239,24 @@ async function editDialog(current){
     focusConfirm:false, showCancelButton:true,
     confirmButtonText:"Guardar", cancelButtonText:"Cancelar",
     customClass: { popup: "swal2-modern" },
-    preConfirm: readModal
+    preConfirm: readModal,
+    didOpen: async () => {
+      if (!USUARIOS.length) await loadUsuarios();
+      const uSel = document.getElementById("c-usuario");
+      if (uSel) {
+        uSel.innerHTML = `<option value="">Seleccione...</option>${optionsUsuarios(vals.idUsuario)}`;
+      }
+    }
   });
 
   return value || null;
 }
 
 
+
  // ------- CRUD -------
  async function loadClientes(){
-  tbody.innerHTML = `<tr><td colspan="7">Cargando . . .</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="5">Cargando . . .</td></tr>`;
   try{
     const raw = await getClientes();
     DATA = normalizeList(raw);
@@ -215,7 +265,7 @@ async function editDialog(current){
     applyFilters();
   }catch(e){
     console.error(e);
-    tbody.innerHTML = `<tr><td colspan="7">Error al cargar Los Clientes</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5">Error al cargar Los Clientes</td></tr>`;
     toast("error","Error cargando Clientes");
   }
 }
@@ -244,7 +294,7 @@ tbody.addEventListener("click", async (e)=>{
   if (btn.classList.contains("btn-view")){
     const t = tr.querySelectorAll("td");
     await Swal.fire({
-      title: `Hab. ${t[0].textContent.trim()} • ${t[1].textContent.trim()}`,
+      title: `Cli. ${t[0].textContent.trim()} • ${t[1].textContent.trim()}`,
       html: `
         <div style="text-align:left">
           <p><b>Nombre:</b> ${t[2].textContent}</p>
@@ -297,7 +347,8 @@ tbody.addEventListener("click", async (e)=>{
 });
 
 // ------- Init -------
-loadClientes();
+Promise.all([loadUsuarios(), loadClientes()]);
+
 
 
 });
