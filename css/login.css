@@ -1,225 +1,507 @@
-:root {
-    --primary-blue: #007bff; /* Color principal del botón y enlaces */
-    --light-blue-bg: #e0f2f7; /* Fondo general de la página */
-    --white-card-bg: #ffffff; /* Fondo de la tarjeta de login */
-    --text-color-dark: #333333; /* Texto principal */
-    --text-color-light: #666666; /* Texto secundario/placeholder */
-    --border-color: #dddddd; /* Bordes de inputs */
-    --google-btn-bg: #f8f8f8; /* Fondo botón Google */
-    --error-red: #dc3545; /* Color para mensajes de error */
-}
+/* 1.PANTALLA DIVIDIDA */
+
+
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: var(--light-blue-bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+
     margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
+
+    padding: 0;
+
+    font-family: Arial, sans-serif;
+
+    background-color: #f2f7f7;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 100vh;
+
 }
 
-.login-container {
-    background-color: var(--white-card-bg);
+
+
+.split-screen-container {
+
+    display: flex;
+
+    width: 80%;
+
+    max-width: 1200px;
+
+    height: 90vh;
+
+    background-color: white;
+
     border-radius: 15px;
+
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    max-width: 450px;
-    width: 100%;
-    text-align: center;
-    position: relative;
-    overflow: hidden; /* Para el efecto de la sombra duplicada */
+
+    overflow: hidden;
+
 }
 
-/* Duplicado de la sombra para el efecto de la imagen */
-.login-container::before {
-    content: '';
-    position: absolute;
-    top: 15px; /* Ligeramente más abajo */
-    left: 15px; /* Ligeramente más a la derecha */
-    right: -15px;
-    bottom: -15px;
-    background-color: var(--white-card-bg);
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); /* Sombra más suave */
-    z-index: -1; /* Detrás del contenido principal */
+
+
+/* Panel Izquierdo: Formulario */
+
+.login-panel {
+
+    flex: 1;
+
+    background-color: #e4ecec;
+
+    padding: 30px 40px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: flex-start;
+
 }
+
+
+
+.login-box {
+
+    max-width: 380px;
+
+    margin: 0 auto;
+
+    width: 100%;
+
+    padding: 20px 0;
+
+    box-sizing: border-box;
+
+    flex-grow: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+}
+
+
+
+/* Panel Derecho: Ilustración (Mantenemos el fondo blanco/claro) */
+
+.illustration-panel {
+
+    flex: 1;
+
+    background-color: #f7f9f9;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+
+
+.illustration-panel img {
+
+    max-width: 90%;
+
+    max-height: 90%;
+
+    object-fit: contain;
+
+}
+
+
+
+/* 2. BARRA SUPERIOR (BrandLogo y Nav) */
+
+
 
 .logo {
-    margin-bottom: 25px;
+
+    text-align: left;
+
+    margin-bottom: 20px;
+
 }
+
+
 
 .logo img {
+
     max-width: 120px;
-    height: auto;
+
 }
 
-h1 {
-    color: var(--text-color-dark);
-    font-size: 28px;
-    margin-bottom: 10px;
+
+
+.top-bar {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin-bottom: 40px;
+
+    padding: 0;
+
 }
 
-p {
-    color: var(--text-color-light);
-    font-size: 16px;
-    margin-bottom: 30px;
+
+
+.brand-logo {
+
+    font-weight: bold;
+
+    font-size: 1.2em;
+
+    color: #333;
+
 }
+
+
+
+.main-nav a {
+
+    text-decoration: none;
+
+    color: #666;
+
+    margin-left: 25px;
+
+    font-size: 0.9em;
+
+    transition: color 0.2s;
+
+}
+
+
+
+.main-nav a:hover {
+
+    color: #74a9a4; /* Hover con color primario */
+
+}
+
+
+
+/* 3. TÍTULOS Y TEXTO DE FORMULARIO */
+
+
+
+.welcome-heading {
+
+    font-size: 2.8em;
+
+    font-weight: bold;
+
+    color: #333333;
+
+    margin-bottom: 50px;
+
+    letter-spacing: 1px;
+
+}
+
+
+
+.welcome-subtitle {
+
+    /* El diseño minimalista no tiene este subtítulo tan grande, lo ocultamos o estilamos discretamente */
+
+    display: none;
+
+}
+
+
+
+/* =================================== */
+
+/* 4. ESTILO DE LÍNEA DE FONDO (Minimalista) */
+
+/* =================================== */
+
+
 
 .form-group {
-    text-align: left;
-    margin-bottom: 20px;
+
+    margin-bottom: 35px;
+
 }
+
+
+
+/* Etiquetas: "Username" y "Password" */
 
 .form-group label {
+
     display: block;
-    margin-bottom: 8px;
-    color: var(--text-color-dark);
-    font-weight: bold;
-    font-size: 14px;
+
+    font-size: 1.1em;
+
+    font-weight: normal;
+
+    color: #333333; /* Texto oscuro */
+
+    margin-bottom: 5px;
+
+    letter-spacing: 1px;
+
 }
 
-.form-group input[type="text"],
-.form-group input[type="password"] {
-    width: calc(100% - 20px);
-    padding: 12px 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 16px;
-    color: var(--text-color-dark);
+
+
+/* Campos de Entrada: Solo la línea de fondo */
+
+.form-group input {
+
+    width: 100%;
+
+    padding: 5px 0;
+
+    border: none;
+
+    border-bottom: 2px solid #74a9a4; /* Línea de fondo con color primario */
+
+    background-color: transparent;
+
     box-sizing: border-box;
-}
 
-.form-group input::placeholder {
-    color: var(--text-color-light);
-}
+    font-size: 1.3em;
 
-.form-group input:focus {
+    color: #333333;
+
     outline: none;
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+
+    box-shadow: none;
+
 }
 
-.error-message {
-    color: var(--error-red);
-    font-size: 12px;
-    margin-top: 5px;
-    min-height: 15px; /* Para mantener el espacio */
+
+
+/* Para simular el texto de ejemplo 'xxxxxxxxxxx' y los puntos de la contraseña */
+
+#email::placeholder,
+
+#password::placeholder {
+
+    color: #555555;
+
+    opacity: 0.8;
+
+    letter-spacing: 2px;
+
 }
+
+
+
+#password {
+
+    letter-spacing: 2px;
+
+}
+
+
+
+/* =================================== */
+
+/* 5. OPCIONES Y BOTONES */
+
+/* =================================== */
+
+
 
 .options-row {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
-    margin-bottom: 25px;
-    font-size: 14px;
+
+    margin-top: 20px;
+
+    margin-bottom: 40px;
+
+    font-size: 1em;
+
+    color: #333333;
+
 }
 
-.remember-me {
-    display: flex;
-    align-items: center;
-    color: var(--text-color-light);
+
+
+.remember-me label {
+
+    font-weight: normal;
+
+    color: #333333;
+
 }
 
-.remember-me input[type="checkbox"] {
-    margin-right: 8px;
-    transform: scale(1.1); /* Ajusta el tamaño del checkbox */
-}
+
 
 .forgot-password {
-    color: var(--primary-blue);
+
+    color: #74a9a4; /* Color primario */
+
+    font-weight: 600;
+
     text-decoration: none;
-    font-weight: bold;
+
 }
 
-.forgot-password:hover {
-    text-decoration: underline;
-}
+
+
+/* Botón SUBMIT */
 
 .btn-primary {
-    background-color: var(--primary-blue);
-    color: white;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
+
     width: 100%;
-    box-sizing: border-box;
-    transition: background-color 0.3s ease;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background-color: #74a9a4; /* Color Primario */
+
+    color: white;
+
+    font-size: 1.2em;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: background-color 0.3s;
+
+    /* Estilo hover con color derivado más oscuro */
+
 }
+
+
 
 .btn-primary:hover {
-    background-color: #0056b3; /* Un azul más oscuro al pasar el ratón */
+
+    background-color: #598581;
+
 }
+
+
+
+/* Estilos de botones secundarios (Google, Divisor) */
+
+
 
 .divider {
-    margin: 30px 0;
-    position: relative;
-    text-align: center;
-    color: var(--text-color-light);
+
+    color: #888;
+
 }
 
-.divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: var(--border-color);
-    z-index: 0;
+.divider::before, .divider::after {
+
+    background: #ccc;
+
 }
 
-.divider span {
-    background-color: var(--white-card-bg);
-    padding: 0 10px;
-    position: relative;
-    z-index: 1;
-}
+
 
 .btn-google {
-    background-color: var(--google-btn-bg);
-    color: var(--text-color-dark);
-    padding: 15px 20px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: background-color 0.3s ease;
+
+    /* Mantenemos blanco para que no interfiera con el diseño minimalista */
+
+    border: 1px solid #ccc;
+
+    background-color: white;
+
+    color: #333;
+
 }
 
-.btn-google:hover {
-    background-color: #ededed;
-}
 
-.btn-google img {
-    width: 20px;
-    height: 20px;
-}
 
 .signup-link {
-    margin-top: 30px;
-    color: var(--text-color-light);
-    font-size: 15px;
+
+    text-align: center;
+
+    margin-top: 20px;
+
+    font-size: 0.9em;
+
 }
+
+
 
 .signup-link a {
-    color: var(--primary-blue);
+
+    color: #74a9a4; /* Color primario */
+
     text-decoration: none;
+
     font-weight: bold;
+
 }
 
-.signup-link a:hover {
-    text-decoration: underline;
+
+
+/* =================================== */
+
+/* 6. RESPONSIVIDAD PARA MÓVILES */
+
+/* =================================== */
+
+@media (max-width: 900px) {
+
+    .split-screen-container {
+
+        flex-direction: column;
+
+        height: auto;
+
+        width: 100%;
+
+        border-radius: 0;
+
+    }
+
+
+
+    .illustration-panel {
+
+        display: none;
+
+    }
+
+
+
+    .login-panel {
+
+        flex: none;
+
+        padding: 30px 20px;
+
+    }
+
+
+
+    .login-box {
+
+        max-width: 100%;
+
+    }
+
 }
