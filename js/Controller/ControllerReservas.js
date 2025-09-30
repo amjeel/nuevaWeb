@@ -58,16 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (s.includes("canc")) return "Cancelada"
     // soporta posibles IDs numéricos
     if (val === 1 || s === "1") return "Confirmada";
-    if (val === 2 || s === "2") return "ocupada";
+    if (val === 2 || s === "2") return "Pendiente";
     if (val === 3 || s === "3") return "Cancelada";
     return "Confirmada";
   };
 
   const statusBadge = (estadoTxt) => {
     const t = estadoKey(estadoTxt);
-    if (t === "disponible")    return `<span class="status-badge available">Disponible</span>`;
-    if (t === "ocupada")       return `<span class="status-badge occupied">Ocupada</span>`;
-    if (t === "limpieza")      return `<span class="status-badge cleaning">Limpieza</span>`;
+    if (t === "disponible")    return `<span class="status-badge available">Confirmada</span>`;
+    if (t === "ocupada")       return `<span class="status-badge occupied">Pendiente</span>`;
+    if (t === "limpieza")      return `<span class="status-badge cleaning">Cancelada</span>`;
     return `<span class="status-badge other">${estadoTxt || "-"}</span>`;
   };
 
@@ -329,7 +329,7 @@ btnExport?.addEventListener("click", ()=>{
     didOpen: async () => {
       // asegura catálogos cargados para los combos
       if (!CLIENTES?.length)        await loadClientes();
-      if (!ESTADOS?.length) await loadEstadosReserva();
+      if (!ESTADOS?.length) await loadReservas();
       if (!PAGOS?.length)    await loadPagos();
 
       // repintar combos tras cargar catálogos
