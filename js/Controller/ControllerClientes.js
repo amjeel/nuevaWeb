@@ -1,4 +1,3 @@
-
 // js/Controller/ControllerClientes.js
 import {
   getClientes,
@@ -13,11 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput  = document.querySelector(".search-input");
   const filterSelect = document.querySelector(".filter-select");
   const btnExport    = document.querySelector(".btn-export");
-
-  const $countAvail  = document.getElementById("countAvailable");
-  const $countOcc    = document.getElementById("countOccupied");
-  const $countClean  = document.getElementById("countCleaning");
-  const $countMaint  = document.getElementById("countMaintenance");
 
   // --- Config API ---
   const API_URL = "http://localhost:8080/api";

@@ -1,28 +1,43 @@
-// js/Controller/ControllerReservas.js
+// js/Controller/ControllerHabitaciones.js
 import {
   getReservas,
-  createReservas,   
-  updateReservas,   
-  deleteReservas    
-} from "../Services/ServiceReservas.js";
+  createReservas,
+  updateReservas,
+  deleteReservas
+} from "../Services/ServicesReservas.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const tbody        = document.querySelector(".data-table tbody");
   const btnNueva     = document.querySelector(".back-button");
   const searchInput  = document.querySelector(".search-input");
   const filterSelect = document.querySelector(".filter-select");
-  const dateFilter   = document.querySelector(".date-filter");
   const btnExport    = document.querySelector(".btn-export");
 
-  const API_URL          = "http://localhost:8080/api";
+  const $countAvail  = document.getElementById("countAvailable");
+  const $countOcc    = document.getElementById("countOccupied");
+  const $countClean  = document.getElementById("countCleaning");
+
+  // --- Config API ---
+  const API_URL = "http://localhost:8080/api";
   const ENDPOINT_ESTADOS = `${API_URL}/consultarEstadosReserva`;
+  const ENDPOINT_CLIENTES = `${API_URL}/consultarClientes`;
+  const ENDPOINT_METODOPAGO = `${API_URL}/consultarMetodosPago`;
 
-  let ESTADOS = [];
-  let DATA    = [];
 
-  // ---------- utils ----------
+  // Catálogos
+  let ESTADOS = []; 
+  let CLIENTES = [];
+  let PAGOS = [];
+
+  // Estado local
+  let DATA = [];
+
+  // ------- Utils -------
   const norm = (s) => (s ?? "").toString()
     .toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  const money = (v) => { const n = Number(String(v ?? "").replace
+    (/[^\d.,-]/g, "").replace(",", ".")); return isNaN(n) ? "0.00" : n.toFixed(2); };
 
   const toast = (icon="success", title="") =>
     Swal.fire({ toast:true, position:"bottom-end", icon, title, timer:1600, showConfirmButton:false, timerProgressBar:true });
@@ -31,26 +46,32 @@ document.addEventListener("DOMContentLoaded", () => {
     if (Array.isArray(json)) return json;
     if (json?.content) return json.content;
     if (json?.data)    return json.data;
+    if (json?.items)   return json.items;
+    if (json?.results) return json.results;
     return [];
   };
 
-  const toDisplayDate = (val) => {
-    if (!val) return "-";
-    const iso = String(val).slice(0,10);
-    const [y,m,d] = iso.split("-");
-    return y && m && d ? `${d}/${m}/${y}` : val;
+  const estadoKey = (val) => {
+    const s = norm(val);
+    if (s.includes("conf")) return "Confirmada";
+    if (s.includes("pend")) return "Pendiente";
+    if (s.includes("canc")) return "Cancelada"
+    // soporta posibles IDs numéricos
+    if (val === 1 || s === "1") return "Confirmada";
+    if (val === 2 || s === "2") return "ocupada";
+    if (val === 3 || s === "3") return "Cancelada";
+    return "Confirmada";
   };
 
-  const toIsoDate = (val) => {
-    if (!val) return null;
-    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
-    const [d,m,y] = String(val).split("/");
-    return d && m && y ? `${y}-${m}-${d}` : val;
+  const statusBadge = (estadoTxt) => {
+    const t = estadoKey(estadoTxt);
+    if (t === "disponible")    return `<span class="status-badge available">Disponible</span>`;
+    if (t === "ocupada")       return `<span class="status-badge occupied">Ocupada</span>`;
+    if (t === "limpieza")      return `<span class="status-badge cleaning">Limpieza</span>`;
+    return `<span class="status-badge other">${estadoTxt || "-"}</span>`;
   };
 
-  const hex32 = (x) => String(x ?? "").toUpperCase().replace(/-/g,"").slice(0,32);
-
-  // ---------- estados ----------
+  // ------- Catálogos -------
   async function loadEstados(){
     try{
       const res = await fetch(ENDPOINT_ESTADOS);
@@ -63,41 +84,94 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function loadClientes() {
+    try{
+      const res = await fetch (ENDPOINT_CLIENTES);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.json();
+      CLIENTES = normalizeList(raw);
+    }catch(err){
+      console.error("Error cargando Clientes:", err);
+      CLIENTES = [];
+    }
+  }
+
+  async function loadPagos() {
+    try{
+      const res = await fetch (ENDPOINT_METODOPAGO);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.json();
+      PAGOS = normalizeList(raw);
+    }catch(err){
+      console.error("Error cargando Pagos:", err);
+      PAGOS = [];
+    }
+  }
+
+  const optionsEstados = (selectedId=null) =>
+    ESTADOS.map(x => {
+      const id   = x.idEstadoReserva ?? x.id ?? "";
+      const name = x.nombreEstadoReserva ?? x.nombre ?? "";
+      const sel  = String(id) === String(selectedId) ? "selected" : "";
+      return `<option value="${id}" ${sel}>${name}</option>`;
+    }).join("");
+
+  const optionsClientes = (selectedId=null) =>
+    CLIENTES.map(x => {
+      const id   = x.idCliente ?? x.id ?? "";
+      const name = x.nombreCliente ?? x.nombre ?? "";
+      const sel  = String(id) === String(selectedId) ? "selected" : "";
+      return `<option value="${id}" ${sel}>${name}</option>`;
+    }).join("");
+
+    const optionsPagos = (selectedId=null) =>
+    PAGOS.map(x => {
+      const id   = x.idMetodoPago ?? x.id ?? "";
+      const name = x.nombreMetodoPago ?? x.nombre ?? "";
+      const sel  = String(id) === String(selectedId) ? "selected" : "";
+      return `<option value="${id}" ${sel}>${name}</option>`;
+    }).join("");
+
+  const ClienteById = (id) => {
+    const t = CLIENTES.find(x => String(x.idCliente ?? x.id) === String(id));
+    return t?.nombreCliente ?? t?.nombre ?? "-";
+  };
+
   const estadoNombreById = (id) => {
     const e = ESTADOS.find(x => String(x.idEstadoReserva ?? x.id) === String(id));
     return e?.nombreEstadoReserva ?? e?.nombre ?? id ?? "-";
   };
 
-  const statusBadge = (estadoTxt) => {
-    const e = norm(estadoTxt);
-    if (e.includes("conf")) return `<span class="status-badge available">Confirmada</span>`;
-    if (e.includes("pend")) return `<span class="status-badge cleaning">Pendiente</span>`;
-    if (e.includes("canc")) return `<span class="status-badge occupied">Cancelada</span>`;
-    return `<span class="status-badge other">${estadoTxt || "-"}</span>`;
+   const PagosbyId = (id) => {
+    const e = PAGOS.find(x => String(x.idMetodoPago ?? x.id) === String(id));
+    return e?.nombreMetodoPago ?? e?.nombre ?? id ?? "-";
   };
 
-  // ---------- render ----------
-  const renderRow = (r) => {
-    const id      = r.idReserva ?? r.id ?? "";
-    const huesped = r.nombreHuesped ?? r.huesped ?? "-";
-    const hab     = r.habitacion ?? r.numeroHabitacion ?? "-";
-    const fIn     = toDisplayDate(r.fechaEntrada);
-    const fOut    = toDisplayDate(r.fechaSalida);
-    const estNom  = r.nombreEstadoReserva ?? r.estado ?? estadoNombreById(r.idEstadoReserva);
+  // ------- Render -------
+  const renderRow = (h) => {
+    const id    = h.idReserva ?? h.id ?? "";
+    const fechRe = h.fechaReserva ?? h.fecha ?? "";
+    const idclie = h.idCliente ?? h.cliente ?? null;
+    const nomCl = h.nombreCliente ?? h.nombreCliente ?? (idCliente ? ClienteById(idCliente) : "-"); // ← mostrar TIPO
+    const prec  = h.precioTotalReserva ?? h.precio ?? 0;
+    const est   = h.nombreEstadoReserva ?? h.estadoNombre ?? h.estado ?? h.idEstadoReserva ?? "";
+    const pag  = h.idMetodoPago ?? h.metodoPago ?? null;
+    const nomPag = h.nombreMetodoPago ?? h.nombreMetodoPago ?? (idMetodoPago ? PagosbyId(idMetodoPago) : "-");
+
+
 
     const tr = document.createElement("tr");
     tr.dataset.idReserva = id;
     tr.innerHTML = `
-      <td>#${id}</td>
-      <td class="user-info"><img src="assets/images/user-avatar.jpg" alt="Guest" class="user-avatar-small"> ${huesped}</td>
-      <td>${hab}</td>
-      <td>${fIn}</td>
-      <td>${fOut}</td>
-      <td>${statusBadge(estNom)}</td>
+      <td class="room-number">${nomCl}</td>
+      <td>${fechRe}</td>
+      <td>$${money(prec)}</td>
+      <td>${nomPag}</td>
+      <td>${statusBadge(est)}</td>
       <td>
-        <button class="btn-action"><i class="fas fa-info-circle"></i></button>
-        <button class="btn-action edit"><i class="fas fa-edit"></i></button>
-        <button class="btn-action delete"><i class="fas fa-trash-alt"></i></button>
+        <button class="btn-action btn-view" title="Ver"><i class="fas fa-eye"></i></button>
+        <button class="btn-action edit" title="Editar"><i class="fas fa-edit"></i></button>
+        <button class="btn-action delete" title="Eliminar"><i class="fas fa-trash"></i></button>
       </td>
     `;
     return tr;
@@ -106,196 +180,229 @@ document.addEventListener("DOMContentLoaded", () => {
   const renderTabla = (lista) => {
     tbody.innerHTML = "";
     if (!lista.length) {
-      tbody.innerHTML = `<tr><td colspan="7">No hay reservas</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7">Actualmente no hay Reservas</td></tr>`;
       return;
     }
-    lista.forEach(r => tbody.appendChild(renderRow(r)));
+    lista.forEach(h => tbody.appendChild(renderRow(h)));
   };
 
-  // ---------- filtros ----------
-  function applyFilters(){
-    const q    = norm(searchInput?.value || "");
-    const fVal = norm(filterSelect?.value || "");
-    const date = dateFilter?.value || "";
+  const contarEstados = (lista) => {
+    let a=0,o=0,l=0,m=0;
+    for (const h of lista) {
+      const key = estadoKey(h.nombreEstadoHabitacion ?? h.estadoNombre ?? h.estado ?? h.idEstadoHabitacion);
+      if (key === "Disponible") a++;
+      else if (key === "Pendiente") o++;
+      else if (key === "Cancelada") l++;
+    }
+    $countAvail.textContent = a;
+    $countOcc.textContent   = o;
+    $countClean.textContent = l;
+  };
 
-    Array.from(tbody.querySelectorAll("tr")).forEach(tr=>{
-      const tds = tr.querySelectorAll("td");
-      const idTxt     = norm(tds[0]?.textContent || "");
-      const huesped   = norm(tds[1]?.textContent || "");
-      const estadoTxt = norm(tds[5]?.textContent || "");
-      const fechaIn   = tds[3]?.textContent || "";
+  // ------- Filtros / búsqueda -------
+ function applyFilters(){
+  const q = norm(searchInput?.value || "");
+  const f = norm(filterSelect?.value || ""); // usar para filtrar por ESTADO (opcional)
 
-      const okQ = !q || idTxt.includes(q) || huesped.includes(q);
-      let okF   = true;
-      if (fVal) okF = estadoTxt.includes(fVal);
-      const okD = !date || fechaIn === toDisplayDate(date);
+  Array.from(tbody.querySelectorAll("tr")).forEach(tr=>{
+    const t = tr.querySelectorAll("td");
+    const fecha   = norm(t[0]?.textContent || "");
+    const cliente = norm(t[1]?.textContent || "");
+    const precio  = norm(t[2]?.textContent || "");
+    const estado  = norm(t[3]?.textContent || "");
+    const pago    = norm(t[4]?.textContent || "");
 
-      tr.style.display = (okQ && okF && okD) ? "" : "none";
-    });
-  }
-  searchInput?.addEventListener("input", applyFilters);
-  filterSelect?.addEventListener("change", applyFilters);
-  dateFilter?.addEventListener("change", applyFilters);
+    const okQ = !q || fecha.includes(q) || cliente.includes(q) || precio.includes(q) || estado.includes(q) || pago.includes(q);
+    const okF = !f || estado.includes(f);
 
-  // ---------- export ----------
-  btnExport?.addEventListener("click", ()=>{
-    const rows = Array.from(tbody.querySelectorAll("tr")).filter(tr=>tr.style.display!=="none");
-    if (!rows.length) return toast("info","No hay datos para exportar");
-    const headers = ["ID Reserva","Huésped","Habitación","Fecha Entrada","Fecha Salida","Estado"];
-    const csv = [headers.join(",")];
-    rows.forEach(tr=>{
-      const t = tr.querySelectorAll("td");
-      csv.push([
-        t[0].textContent.trim(),
-        `"${t[1].textContent.trim()}"`,
-        t[2].textContent.trim(),
-        t[3].textContent.trim(),
-        t[4].textContent.trim(),
-        t[5].textContent.trim()
-      ].join(","));
-    });
-    const blob = new Blob([csv.join("\n")], { type:"text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = Object.assign(document.createElement("a"), { href:url, download:`reservas_${new Date().toISOString().slice(0,10)}.csv` });
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    toast("success","CSV exportado");
+    tr.style.display = (okQ && okF) ? "" : "none";
+  });
+}
+searchInput?.addEventListener("input", applyFilters);
+filterSelect?.addEventListener("change", applyFilters);
+
+// ------- Exportar CSV (RESERVAS) -------
+btnExport?.addEventListener("click", ()=>{
+  const rows = Array.from(tbody.querySelectorAll("tr")).filter(tr => tr.style.display !== "none");
+  if (!rows.length) return toast?.("info","No hay datos para exportar");
+
+  const headers = ["Fecha", "Cliente", "Precio", "Estado", "Método de pago"];
+  const csv = [headers.join(",")];
+
+  rows.forEach(tr=>{
+    const t = tr.querySelectorAll("td");
+    const fecha   = (t[0]?.textContent.trim() || "");
+    const cliente = (t[1]?.textContent.trim() || "");
+    const precio  = (t[2]?.textContent.trim() || "");
+    const estado  = (t[3]?.textContent.trim() || "");
+    const pago    = (t[4]?.textContent.trim() || "");
+
+    csv.push([
+      fecha,
+      cliente.replaceAll(`"`,`""`),
+      precio.replace("$",""),
+      estado.replaceAll(`"`,`""`),
+      pago.replaceAll(`"`,`""`)
+    ].map(v => /[,"]/.test(v) ? `"${v}"` : v).join(","));
   });
 
-  // ---------- modal ----------
+  const blob = new Blob([csv.join("\n")], { type:"text/csv;charset=utf-8;" });
+  const url  = URL.createObjectURL(blob);
+  const a = Object.assign(document.createElement("a"), {
+    href: url,
+    download: `reservas_${new Date().toISOString().slice(0,10)}.csv`
+  });
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  toast?.("success","CSV exportado");
+});
+
+  // ------- Modal (SweetAlert2) -------
   const modalHtml = (vals = {}) => `
     <div class="swal2-grid compact" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left">
-      <div class="fg full">
-        <label>Huésped / ID Cliente</label>
-        <input id="r-cliente" class="input" type="text" placeholder="ID del cliente" value="${vals.idCliente ?? ""}">
-        <small>Ingresa el <b>ID del cliente</b> (GUID). Si tu UI muestra nombre, mapea a ID antes de enviar.</small>
-      </div>
-      <div class="fg">
-        <label>Habitación / ID Habitacion</label>
-        <input id="r-habitacion" class="input" type="text" placeholder="ID Habitación" value="${vals.idHabitacion ?? ""}">
-      </div>
-      <div class="fg">
-        <label>Fecha Entrada</label>
-        <input id="r-fechaIn" class="input" type="date" value="${vals.fechaEntrada ? toIsoDate(vals.fechaEntrada) : ""}">
-      </div>
-      <div class="fg">
-        <label>Fecha Salida</label>
-        <input id="r-fechaOut" class="input" type="date" value="${vals.fechaSalida ? toIsoDate(vals.fechaSalida) : ""}">
-      </div>
-      <div class="fg">
-        <label>Estado</label>
-        <select id="r-estado" class="input">
-          <option value="">Seleccione...</option>
-          ${ESTADOS.map(e => {
-            const id = e.idEstadoReserva ?? e.id ?? "";
-            const name = e.nombreEstadoReserva ?? e.nombre ?? "";
-            const sel = String(id) === String(vals.idEstadoReserva) ? "selected" : "";
-            return `<option value="${id}" ${sel}>${name}</option>`;
-          }).join("")}
-        </select>
-      </div>
-      <div class="fg full">
-        <label>Notas (opcional)</label>
-        <textarea id="r-notas" class="textarea" rows="3" placeholder="Comentarios...">${vals.notas ?? ""}</textarea>
-      </div>
+    <div class="fg">
+      <label>Fecha de reserva</label>
+      <input id="r-fecha" class="input" type="date"
+             value="${vals.fechaReserva ?? vals.fecha ?? ""}">
     </div>
+
+    <div class="fg">
+      <label>Cliente</label>
+      <select id="r-cliente" class="input">
+        <option value="">Seleccione...</option>
+        ${typeof optionsClientes === "function" ? optionsClientes(vals.idCliente ?? vals.cliente ?? "") : ""}
+      </select>
+    </div>
+
+    <div class="fg">
+      <label>Precio total</label>
+      <input id="r-precio" class="input" type="number" step="0.01" min="0" placeholder="0.00"
+             value="${vals.precioTotalReserva ?? vals.precio ?? ""}">
+    </div>
+
+    <div class="fg">
+      <label>Estado</label>
+      <select id="r-estado" class="input">
+        <option value="">Seleccione...</option>
+        ${typeof optionsEstados === "function" ? optionsEstados(vals.idEstadoReserva ?? vals.estado ?? "") : ""}
+      </select>
+    </div>
+
+    <div class="fg">
+      <label>Método de pago</label>
+      <select id="r-pago" class="input">
+        <option value="">Seleccione...</option>
+        ${typeof optionsPagos === "function" ? optionsPagos(vals.idMetodoPago ?? vals.metodoPago ?? "") : ""}
+      </select>
+    </div>
+  </div>
   `;
 
   const readModal = () => {
-    const idCliente   = document.getElementById("r-cliente").value.trim();
-    const idHabitacion= document.getElementById("r-habitacion").value.trim();
-    const fechaInISO  = document.getElementById("r-fechaIn").value.trim();   // YYYY-MM-DD
-    const fechaOutISO = document.getElementById("r-fechaOut").value.trim();  // YYYY-MM-DD
-    const estado      = document.getElementById("r-estado").value;
-    const notas       = (document.getElementById("r-notas")?.value || "").trim();
+  const fechaReserva = document.getElementById("r-fecha").value.trim();
+  const idCliente    = document.getElementById("r-cliente").value.trim();
+  const precio       = document.getElementById("r-precio").value.trim();
+  const idEstado     = document.getElementById("r-estado").value.trim();
+  const idMetodoPago = document.getElementById("r-pago").value.trim();
 
-    if (!idCliente || !idHabitacion || !fechaInISO || !fechaOutISO || !estado) {
-      Swal.showValidationMessage("Completa todos los campos obligatorios.");
-      return false;
-    }
-    // devuelve un objeto "front" que luego mapeamos al DTO
-    return {
-      idCliente,
-      idHabitacion,
-      fechaEntrada: fechaInISO,
-      fechaSalida:  fechaOutISO,
-      idEstadoReserva: estado,
-      notas:        notas || null
-    };
-  };
-
-  // ---------- mapeo al DTO del backend ----------
-  function buildReservaPayload(front){
-    // Ajusta nombres EXACTOS a tu DTO si difieren:
-    return {
-      idCliente:       hex32(front.idCliente),
-      idHabitacion:    hex32(front.idHabitacion),
-      fechaEntrada:    toIsoDate(front.fechaEntrada),  // "YYYY-MM-DD"
-      fechaSalida:     toIsoDate(front.fechaSalida),   // "YYYY-MM-DD"
-      idEstadoReserva: hex32(front.idEstadoReserva),
-      notas:           front.notas ?? null
-    };
+  if (!fechaReserva || !idCliente || !precio || !idEstado || !idMetodoPago) {
+    Swal.showValidationMessage("Completa todos los campos obligatorios.");
+    return false;
   }
 
-  // ---------- diálogos ----------
+  return {
+    fechaReserva,
+    idCliente,
+    precioTotalReserva: parseFloat(precio),
+    idEstadoReserva: idEstado,
+    idMetodoPago
+  };
+  };
+
   async function createDialog(){
-    await loadEstados();
     const { value } = await Swal.fire({
-      title:"Nueva Reserva",
-      html: modalHtml(),
-      focusConfirm:false, showCancelButton:true,
-      confirmButtonText:"Guardar", cancelButtonText:"Cancelar",
-      customClass: { popup: "swal2-modern" },
-      preConfirm: readModal
-    });
-    return value || null;
+    title:"Nueva Reserva",
+    html: modalHtml(),
+    focusConfirm:false, showCancelButton:true,
+    confirmButtonText:"Guardar", cancelButtonText:"Cancelar",
+    customClass: { popup: "swal2-modern" },
+    preConfirm: readModal,
+    didOpen: async () => {
+      // asegura catálogos cargados para los combos
+      if (!CLIENTES?.length)        await loadClientes();
+      if (!ESTADOS?.length) await loadEstadosReserva();
+      if (!PAGOS?.length)    await loadPagos();
+
+      // repintar combos tras cargar catálogos
+      const cliSel = document.getElementById("r-cliente");
+      const estSel = document.getElementById("r-estado");
+      const pagSel = document.getElementById("r-pago");
+
+      if (cliSel) cliSel.innerHTML = `<option value="">Seleccione...</option>${optionsClientes()}`;
+      if (estSel) estSel.innerHTML = `<option value="">Seleccione...</option>${optionsEstados()}`;
+      if (pagSel) pagSel.innerHTML = `<option value="">Seleccione...</option>${optionsPagos()}`;
+    }
+  });
+  return value || null;
   }
 
   async function editDialog(current){
-    await loadEstados();
-    // asumimos que en DATA vienen los ids reales; si no, adapta estas claves
-    const vals = {
-      idCliente:       current.idCliente ?? "",
-      idHabitacion:    current.idHabitacion ?? "",
-      fechaEntrada:    current.fechaEntrada ?? "",
-      fechaSalida:     current.fechaSalida ?? "",
-      idEstadoReserva: current.idEstadoReserva ?? "",
-      notas:           current.notas ?? ""
-    };
-    const { value } = await Swal.fire({
-      title:`Editar Reserva ${current.idReserva ?? ""}`,
-      html: modalHtml(vals),
-      focusConfirm:false, showCancelButton:true,
-      confirmButtonText:"Guardar", cancelButtonText:"Cancelar",
-      customClass: { popup: "swal2-modern" },
-      preConfirm: readModal
-    });
-    return value || null;
+    // asegura catálogos cargados para los combos
+  await Promise.all([loadClientes(), loadEstados(), loadPagos()]);
+
+  const vals = {
+    fechaReserva:      current.fechaReserva ?? current.fecha ?? "",
+    idCliente:         current.idCliente ?? current.cliente ?? "",
+    precioTotalReserva: current.precioTotalReserva ?? current.precio ?? "",
+    idEstadoReserva:   current.idEstadoReserva ?? current.estado ?? "",
+    idMetodoPago:      current.idMetodoPago ?? current.metodoPago ?? ""
+  };
+
+  const { value } = await Swal.fire({
+    title: `Editar Reserva ${vals.fechaReserva || ""}`,
+    html: modalHtml(vals),
+    focusConfirm: false, showCancelButton: true,
+    confirmButtonText: "Guardar", cancelButtonText: "Cancelar",
+    customClass: { popup: "swal2-modern" },
+    preConfirm: readModal,
+    didOpen: () => {
+      // repintar combos con la opción seleccionada
+      const cliSel = document.getElementById("r-cliente");
+      const estSel = document.getElementById("r-estado");
+      const pagSel = document.getElementById("r-pago");
+      if (cliSel) cliSel.innerHTML = `<option value="">Seleccione...</option>${optionsClientes(vals.idCliente)}`;
+      if (estSel) estSel.innerHTML = `<option value="">Seleccione...</option>${optionsEstados(vals.idEstadoReserva)}`;
+      if (pagSel) pagSel.innerHTML = `<option value="">Seleccione...</option>${optionsPagos(vals.idMetodoPago)}`;
+    }
+  });
+
+  return value || null;
   }
 
-  // ---------- carga inicial ----------
+  // ------- CRUD -------
   async function loadReservas(){
-    tbody.innerHTML = `<tr><td colspan="7">Cargando...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7">Cargando . . .</td></tr>`;
     try{
       const raw = await getReservas();
       DATA = normalizeList(raw);
-      await loadEstados();
+
+      // asegúrate de tener catálogos para pintar nombres
+      await Promise.all([loadClientes(), loadEstados(), loadPagos()]);
+
       renderTabla(DATA);
+      contarEstados(DATA);
       applyFilters();
     }catch(e){
       console.error(e);
-      tbody.innerHTML = `<tr><td colspan="7">Error al cargar reservas</td></tr>`;
-      toast("error","Error cargando reservas");
+      tbody.innerHTML = `<tr><td colspan="7">Error al cargar Reservas</td></tr>`;
+      toast("error","Error cargando Reservas");
     }
   }
 
-  // ---------- acciones ----------
   btnNueva?.addEventListener("click", async () => {
     try{
-      const front = await createDialog();
-      if (!front) return;
-      const payload = buildReservaPayload(front);
-      const resp = await createReservas(payload);  // ← usar la import plural
-      console.log("[POST] payload", payload, "resp", resp);
+      const payload = await createDialog();
+      if (!payload) return;
+      await createReservas(payload);
       toast("success","Reserva creada");
       await loadReservas();
     }catch(e){
@@ -312,33 +419,38 @@ document.addEventListener("DOMContentLoaded", () => {
     const id = tr?.dataset.idReserva;
     if (!id) return;
 
-    if (!btn.classList.contains("edit") && !btn.classList.contains("delete")) {
-      const t = tr.querySelectorAll("td");
-      await Swal.fire({
-        title: `Reserva ${t[0].textContent.trim()}`,
-        html: `
-          <div style="text-align:left">
-            <p><b>Huésped:</b> ${t[1].textContent.trim()}</p>
-            <p><b>Habitación:</b> ${t[2].textContent.trim()}</p>
-            <p><b>Entrada:</b> ${t[3].textContent.trim()}</p>
-            <p><b>Salida:</b> ${t[4].textContent.trim()}</p>
-            <p><b>Estado:</b> ${t[5].textContent.trim()}</p>
-          </div>
-        `,
-        icon:"info"
-      });
-      return;
-    }
+     if (btn.classList.contains("btn-view")){
+    const t = tr.querySelectorAll("td");
+    const fecha   = t[0]?.textContent.trim() || "";
+    const cliente = t[1]?.textContent.trim() || "";
+    const precio  = t[2]?.textContent.trim() || "";
+    const estado  = t[3]?.textContent.trim() || "";
+    const pago    = t[4]?.textContent.trim() || "";
+
+    await Swal.fire({
+      title: `Reserva ${id}`,
+      html: `
+        <div style="text-align:left">
+          <p><b>Fecha de reserva:</b> ${fecha}</p>
+          <p><b>Huésped principal:</b> ${cliente}</p>
+          <p><b>Precio total:</b> ${precio}</p>
+          <p><b>Estado:</b> ${estado}</p>
+          <p><b>Método de pago:</b> ${pago}</p>
+        </div>
+      `,
+      icon:"info"
+    });
+    return;
+  }
 
     if (btn.classList.contains("edit")){
       try{
         const current = DATA.find(x => String(x.idReserva ?? x.id) === String(id));
         if (!current) return;
-        const front = await editDialog(current);
-        if (!front) return;
-        const payload = buildReservaPayload(front);
-        const resp = await updateReservas(id, payload); // ← plural
-        console.log("[PUT] id", id, "payload", payload, "resp", resp);
+        const payload = await editDialog(current);
+        if (!payload) return;
+
+        await updateReservas(id, payload);
         toast("success","Reserva actualizada");
         await loadReservas();
       }catch(e){
@@ -349,17 +461,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (btn.classList.contains("delete")){
+      const numTxt = tr.querySelector("td")?.textContent.trim() || "la Reserva";
       const { isConfirmed } = await Swal.fire({
-        title:"¿Eliminar reserva?",
-        text:`Se eliminará la reserva #${id}. Esta acción no se puede deshacer.`,
+        title:"¿Eliminar Reserva?",
+        text:`Se eliminará ${numTxt}. Esta acción no se puede deshacer.`,
         icon:"warning", showCancelButton:true,
         confirmButtonText:"Sí, eliminar", cancelButtonText:"Cancelar"
       });
       if (!isConfirmed) return;
 
       try{
-        const resp = await deleteReservas(id); // ← plural
-        console.log("[DELETE] id", id, "resp", resp);
+        await deleteReservas(id);
         toast("success","Reserva eliminada");
         await loadReservas();
       }catch(e){
@@ -369,5 +481,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // ------- Init -------
   loadReservas();
 });
