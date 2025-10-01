@@ -7,6 +7,43 @@
     margin-bottom: 30px;
 }
 
+.room-status-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.status-box {
+  background: #f9fafb;               /* gris clarito */
+  border: 1px solid #e5e7eb;         /* borde sutil */
+  border-radius: 12px;               /* esquinas redondeadas */
+  padding: 20px 10px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.status-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.status-box h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151; /* gris oscuro */
+}
+
+.status-box p {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #111827; /* casi negro */
+}
+
+
 .section-card h3 {
     font-size: 1.5em;
     color: #2c3e50;

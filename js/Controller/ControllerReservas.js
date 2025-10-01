@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const $countOcc    = document.getElementById("countOccupied");
   const $countClean  = document.getElementById("countCleaning");
 
+
   // --- Config API ---
   const API_URL = "http://localhost:8080/api";
   const ENDPOINT_ESTADOS = `${API_URL}/consultarEstadosReserva`;
@@ -52,24 +53,21 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const estadoKey = (val) => {
-    const s = norm(val);
-    if (s.includes("conf")) return "Confirmada";
-    if (s.includes("pend")) return "Pendiente";
-    if (s.includes("canc")) return "Cancelada"
-    // soporta posibles IDs numéricos
-    if (val === 1 || s === "1") return "Confirmada";
-    if (val === 2 || s === "2") return "Pendiente";
-    if (val === 3 || s === "3") return "Cancelada";
-    return "Confirmada";
-  };
+  const s = norm(val);
+  if (s.includes("conf") || s === "1") return "Confirmada";
+  if (s.includes("pend") || s === "2") return "Pendiente";
+  if (s.includes("canc") || s === "3") return "Cancelada";
+  return val || "-";
+};
 
-  const statusBadge = (estadoTxt) => {
-    const t = estadoKey(estadoTxt);
-    if (t === "disponible")    return `<span class="status-badge available">Confirmada</span>`;
-    if (t === "ocupada")       return `<span class="status-badge occupied">Pendiente</span>`;
-    if (t === "limpieza")      return `<span class="status-badge cleaning">Cancelada</span>`;
-    return `<span class="status-badge other">${estadoTxt || "-"}</span>`;
-  };
+const statusBadge = (estadoTxt) => {
+  const t = estadoKey(estadoTxt);
+  const cls = t === "Confirmada" ? "available"
+           : t === "Pendiente"  ? "occupied"
+           : t === "Cancelada"  ? "cleaning"
+           : "other";
+  return `<span class="status-badge ${cls}">${t}</span>`;
+};
 
   // ------- Catálogos -------
   async function loadEstados(){
@@ -149,15 +147,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ------- Render -------
   const renderRow = (h) => {
-    const id    = h.idReserva ?? h.id ?? "";
-    const fechRe = h.fechaReserva ?? h.fecha ?? "";
-    const idclie = h.idCliente ?? h.cliente ?? null;
-    const nomCl = h.nombreCliente ?? h.nombreCliente ?? (idCliente ? ClienteById(idCliente) : "-"); // ← mostrar TIPO
-    const prec  = h.precioTotalReserva ?? h.precio ?? 0;
-    const est   = h.nombreEstadoReserva ?? h.estadoNombre ?? h.estado ?? h.idEstadoReserva ?? "";
-    const pag  = h.idMetodoPago ?? h.metodoPago ?? null;
-    const nomPag = h.nombreMetodoPago ?? h.nombreMetodoPago ?? (idMetodoPago ? PagosbyId(idMetodoPago) : "-");
+  const id      = h.idReserva ?? h.id ?? "";
+  const fechRe  = h.fechaReserva ?? h.fecha ?? "";
 
+  const idCli   = h.idCliente ?? h.cliente ?? "";
+  const nomCl   = h.nombreCliente ?? h.clienteNombre ?? (idCli ? ClienteById(idCli) : "-");
+
+  const prec    = h.precioTotalReserva ?? h.precio ?? 0;
+
+  const est     = h.nombreEstadoReserva ?? h.estadoNombre ?? h.estado ?? h.idEstadoReserva ?? "";
+
+  const idPago  = h.idMetodoPago ?? h.metodoPago ?? "";
+  const nomPag  = h.nombreMetodoPago ?? h.metodoPagoNombre ?? (idPago ? PagosbyId(idPago) : "-");
 
 
     const tr = document.createElement("tr");
@@ -187,63 +188,55 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const contarEstados = (lista) => {
-    let a=0,o=0,l=0,m=0;
-    for (const h of lista) {
-      const key = estadoKey(h.nombreEstadoHabitacion ?? h.estadoNombre ?? h.estado ?? h.idEstadoHabitacion);
-      if (key === "Disponible") a++;
-      else if (key === "Pendiente") o++;
-      else if (key === "Cancelada") l++;
-    }
-    $countAvail.textContent = a;
-    $countOcc.textContent   = o;
-    $countClean.textContent = l;
-  };
+  let conf=0, pend=0, canc=0;
+  for (const h of lista) {
+    const key = estadoKey(h.nombreEstadoReserva ?? h.estadoNombre ?? h.estado ?? h.idEstadoReserva);
+    if (key === "Confirmada") conf++;
+    else if (key === "Pendiente") pend++;
+    else if (key === "Cancelada") canc++;
+  }
+  if ($countAvail) $countAvail.textContent = conf;
+  if ($countOcc)   $countOcc.textContent   = pend;
+  if ($countClean) $countClean.textContent = canc;
+};
 
   // ------- Filtros / búsqueda -------
  function applyFilters(){
   const q = norm(searchInput?.value || "");
-  const f = norm(filterSelect?.value || ""); // usar para filtrar por ESTADO (opcional)
+  const f = norm(filterSelect?.value || ""); // por ESTADO
 
   Array.from(tbody.querySelectorAll("tr")).forEach(tr=>{
     const t = tr.querySelectorAll("td");
-    const fecha   = norm(t[0]?.textContent || "");
-    const cliente = norm(t[1]?.textContent || "");
+    const cliente = norm(t[0]?.textContent || "");
+    const fecha   = norm(t[1]?.textContent || "");
     const precio  = norm(t[2]?.textContent || "");
-    const estado  = norm(t[3]?.textContent || "");
-    const pago    = norm(t[4]?.textContent || "");
+    const pago    = norm(t[3]?.textContent || "");
+    const estado  = norm(t[4]?.textContent || "");
 
-    const okQ = !q || fecha.includes(q) || cliente.includes(q) || precio.includes(q) || estado.includes(q) || pago.includes(q);
+    const okQ = !q || cliente.includes(q) || fecha.includes(q) || precio.includes(q) || pago.includes(q) || estado.includes(q);
     const okF = !f || estado.includes(f);
 
     tr.style.display = (okQ && okF) ? "" : "none";
   });
 }
-searchInput?.addEventListener("input", applyFilters);
-filterSelect?.addEventListener("change", applyFilters);
-
 // ------- Exportar CSV (RESERVAS) -------
 btnExport?.addEventListener("click", ()=>{
   const rows = Array.from(tbody.querySelectorAll("tr")).filter(tr => tr.style.display !== "none");
-  if (!rows.length) return toast?.("info","No hay datos para exportar");
+  if (!rows.length) return toast("info","No hay datos para exportar");
 
-  const headers = ["Fecha", "Cliente", "Precio", "Estado", "Método de pago"];
+  const headers = ["Cliente","Fecha","Precio","Método de pago","Estado"];
   const csv = [headers.join(",")];
 
   rows.forEach(tr=>{
     const t = tr.querySelectorAll("td");
-    const fecha   = (t[0]?.textContent.trim() || "");
-    const cliente = (t[1]?.textContent.trim() || "");
-    const precio  = (t[2]?.textContent.trim() || "");
-    const estado  = (t[3]?.textContent.trim() || "");
-    const pago    = (t[4]?.textContent.trim() || "");
+    const cliente = (t[0]?.textContent.trim() || "");
+    const fecha   = (t[1]?.textContent.trim() || "");
+    const precio  = (t[2]?.textContent.trim() || "").replace("$","");
+    const pago    = (t[3]?.textContent.trim() || "");
+    const estado  = (t[4]?.textContent.trim() || "");
 
-    csv.push([
-      fecha,
-      cliente.replaceAll(`"`,`""`),
-      precio.replace("$",""),
-      estado.replaceAll(`"`,`""`),
-      pago.replaceAll(`"`,`""`)
-    ].map(v => /[,"]/.test(v) ? `"${v}"` : v).join(","));
+    csv.push([cliente, fecha, precio, pago, estado]
+      .map(v => (/,|"/.test(v) ? `"${v.replaceAll(`"`,`""`)}"` : v)).join(","));
   });
 
   const blob = new Blob([csv.join("\n")], { type:"text/csv;charset=utf-8;" });
@@ -253,47 +246,61 @@ btnExport?.addEventListener("click", ()=>{
     download: `reservas_${new Date().toISOString().slice(0,10)}.csv`
   });
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  toast?.("success","CSV exportado");
+  toast("success","CSV exportado");
 });
 
   // ------- Modal (SweetAlert2) -------
   const modalHtml = (vals = {}) => `
-    <div class="swal2-grid compact" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left">
-    <div class="fg">
-      <label>Fecha de reserva</label>
+     <div class="swal2-grid compact" style="
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    text-align: left;
+    font-size: 15px;
+    padding: 5px 0;
+  ">
+
+    <div class="fg" style="display: flex; flex-direction: column;">
+      <label for="r-fecha"><strong>Fecha de reserva</strong></label>
       <input id="r-fecha" class="input" type="date"
-             value="${vals.fechaReserva ?? vals.fecha ?? ""}">
+             value="${vals.fechaReserva ?? vals.fecha ?? ""}"
+             style="padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
     </div>
 
-    <div class="fg">
-      <label>Cliente</label>
-      <select id="r-cliente" class="input">
+    <div class="fg" style="display: flex; flex-direction: column;">
+      <label for="r-cliente"><strong>Cliente</strong></label>
+      <select id="r-cliente" class="input"
+              style="padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
         <option value="">Seleccione...</option>
         ${typeof optionsClientes === "function" ? optionsClientes(vals.idCliente ?? vals.cliente ?? "") : ""}
       </select>
     </div>
 
-    <div class="fg">
-      <label>Precio total</label>
+    <div class="fg" style="display: flex; flex-direction: column;">
+      <label for="r-precio"><strong>Precio total</strong></label>
       <input id="r-precio" class="input" type="number" step="0.01" min="0" placeholder="0.00"
-             value="${vals.precioTotalReserva ?? vals.precio ?? ""}">
+             value="${vals.precioTotalReserva ?? vals.precio ?? ""}"
+             style="padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
     </div>
 
-    <div class="fg">
-      <label>Estado</label>
-      <select id="r-estado" class="input">
+    <div class="fg" style="display: flex; flex-direction: column;">
+      <label for="r-estado"><strong>Estado</strong></label>
+      <select id="r-estado" class="input"
+              style="padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
         <option value="">Seleccione...</option>
         ${typeof optionsEstados === "function" ? optionsEstados(vals.idEstadoReserva ?? vals.estado ?? "") : ""}
       </select>
     </div>
 
-    <div class="fg">
-      <label>Método de pago</label>
-      <select id="r-pago" class="input">
+    <div class="fg" style="grid-column: span 2; display: flex; flex-direction: column;">
+      <label for="r-pago"><strong>Método de pago</strong></label>
+      <select id="r-pago" class="input"
+              style="padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
         <option value="">Seleccione...</option>
         ${typeof optionsPagos === "function" ? optionsPagos(vals.idMetodoPago ?? vals.metodoPago ?? "") : ""}
       </select>
     </div>
+
   </div>
   `;
 
@@ -328,8 +335,8 @@ btnExport?.addEventListener("click", ()=>{
     preConfirm: readModal,
     didOpen: async () => {
       // asegura catálogos cargados para los combos
-      if (!CLIENTES?.length)        await loadClientes();
-      if (!ESTADOS?.length) await loadReservas();
+      if (!CLIENTES?.length) await loadClientes();
+      if (!ESTADOS?.length) await loadEstados();
       if (!PAGOS?.length)    await loadPagos();
 
       // repintar combos tras cargar catálogos
