@@ -1,4 +1,3 @@
-// js/Controller/ControllerHabitaciones.js
 import {
   getReservas,
   createReservas,

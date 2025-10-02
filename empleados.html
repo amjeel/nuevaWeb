@@ -1,176 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finder Hotel - Gestión de Empleados</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finder Hotel - Gestión de Empleados</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- SweetAlert2 (para modales) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Iconos / Tipografía -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/empleados.css">
+  <!-- Estilos del proyecto -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/empleados.css" />
 </head>
 
 <body>
-    <div class="main-layout">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo">
-                <h3>Finder Hotel</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li class="nav-item"><a href="habitaciones.html"><i class="fas fa-bed"></i> Habitaciones</a></li>
-                    <li class="nav-item"><a href="reservas.html"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
-                    <li class="nav-item active"><a href="empleados.html"><i class="fas fa-users"></i> Empleados</a></li>
-                    <li class="nav-item"><a href="clientes.html"><i class="fas fa-user-friends"></i> Clientes</a></li>
-                    <li class="nav-item"><a href="checkin-checkout.html"><i class="fas fa-exchange-alt"></i>
-                            Check-in/Check-out</a></li>
-                     <li class="nav-item"><a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a></li>
-                    
-                </ul>
-            </nav>
-            <div class="sidebar-footer">
-                <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
-                <div class="sidebar-user-profile">
-                    <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar">
-                    <div class="sidebar-user-details">
-                        <span class="sidebar-user-name">Adriana Montoya</span>
-                        <span class="sidebar-user-email">adriana@finder.com</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
-        <main class="content">
-            <header class="top-header">
-                <div class="company-name">Finder Hotel</div>
-                <div class="user-profile-header">
-                    <img src="assets/images/user-avatar.jpg" alt="User Avatar">
-                    <span>Adriana Montoya</span>
-                </div>
-            </header>
-            <div class="page-content-wrapper">
-                <div class="page-main-header">
-                    <h2>Gestión de Empleados</h2>
-                    <button id="btn-abrir" class="back-button"><i class="fas fa-user-plus"></i> Nuevo Empleado</button>
-                </div>
+  <div class="main-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="img/finder.png" alt="Finder Logo" class="sidebar-logo" />
+        <h3>Finder Hotel</h3>
+      </div>
 
-                <section class="section-card">
-                    <h3>Estadísticas de Empleados</h3>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <h4>Total Empleados</h4>
-                            <p>50</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Administradores</h4>
-                            <p>5</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Recepcionistas</h4>
-                            <p>15</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Personal de Limpieza</h4>
-                            <p>20</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Personal de Mantenimiento</h4>
-                            <p>10</p>
-                        </div>
-                    </div>
-                </section>
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="nav-item"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+          <li class="nav-item"><a href="habitaciones.html"><i class="fas fa-bed"></i> Habitaciones</a></li>
+          <li class="nav-item"><a href="reservas.html"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+          <li class="nav-item active"><a href="empleados.html"><i class="fas fa-users"></i> Empleados</a></li>
+          <li class="nav-item"><a href="clientes.html"><i class="fas fa-user-friends"></i> Clientes</a></li>
+          <li class="nav-item"><a href="checkin-checkout.html"><i class="fas fa-exchange-alt"></i> Check-in/Check-out</a></li>
+          <li class="nav-item"><a href="usuarios.html"><i class="fas fa-users-cog"></i> Usuarios</a></li>
+        </ul>
+      </nav>
 
-                <section class="section-card">
-                    <h3>Listado de Empleados</h3>
-                    <div class="table-actions">
-                        <input type="text" placeholder="Buscar por nombre o rol..." class="search-input">
-                        <button class="btn-export"><i class="fas fa-download"></i> Exportar</button>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Email</th>
-                                <th>Rol</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                             <td colspan="5">Cargando . . .</td>
-                        </tbody>
-                    </table>
-                </section>
-
-            </div>
-        </main>
-    </div>
-    <!-- Modal Crear/Editar Usuarios -->
-    <div class="modal fade" id="EmpleadosModal" tabindex="-1" aria-labelledby="empleadosModalLable" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-3">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="empleadosModalLable">Agregar Empleado</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <form id="empleadosForm">
-                    <input type="hidden" id="empleadosId" />
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="empleadosName" class="form-label">Nombre <span style="color:red">*</span></label>
-                            <input type="text" class="form-control" id="empleadosName"
-                                placeholder="Nombre del usuario" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="categoryDescription" class="form-label">Descripción <span
-                                    style="color:red">*</span></label>
-                            <textarea id="categoryDescription" class="form-control" required></textarea>
-                        </div>
-                                                <div class="mb-3">
-                            <label for="categoryDescription" class="form-label">Correo Electronico <span
-                                    style="color:red">*</span></label>
-                            <textarea id="categoryDescription" class="form-control" required></textarea>
-                        </div>
-                                                <div class="mb-3">
-                            <label for="categoryDescription" class="form-label">Descripción <span
-                                    style="color:red">*</span></label>
-                            <textarea id="categoryDescription" class="form-control" required></textarea>
-                        </div>
-                                                <div class="mb-3">
-                            <label for="categoryDescription" class="form-label">Descripción <span
-                                    style="color:red">*</span></label>
-                            <textarea id="categoryDescription" class="form-control" required></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-success" id="saveCategory">
-                            Guardar
-                        </button>
-                    </div>
-                </form>
-            </div>
+      <div class="sidebar-footer">
+        <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
+        <div class="sidebar-user-profile">
+          <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar" />
+          <div class="sidebar-user-details">
+            <span class="sidebar-user-name">Adriana Montoya</span>
+            <span class="sidebar-user-email">adriana@finder.com</span>
+          </div>
         </div>
-    </div>
- 
-    <!-- JS Bootstrap bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-        crossorigin="anonymous"></script>
-<script type="module" src="js/Controller/ControllerEmpleados.js"></script>
+      </div>
+    </aside>
 
-    <script src="js/cerrar sesion.js"></script>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="content">
+      <header class="top-header">
+        <div class="company-name">Finder Hotel</div>
+        <div class="user-profile-header">
+          <img src="assets/images/user-avatar.jpg" alt="User Avatar" />
+          <span>Adriana Montoya</span>
+        </div>
+      </header>
+
+      <div class="page-content-wrapper">
+        <div class="page-main-header">
+          <h2>Gestión de Empleados</h2>
+          <!-- Este botón es el que abre el modal desde el Controller -->
+          <button class="back-button"><i class="fas fa-user-plus"></i> Nuevo Empleado</button>
+        </div>
+
+        <!-- Estadísticas -->
+        <section class="section-card">
+          <h3>Estadísticas de Empleados</h3>
+          <div class="stats-grid">
+            <div class="stat-box"><h4>Total Empleados</h4><p id="totalEmpleados">0</p></div>
+            <div class="stat-box"><h4>Administradores</h4><p id="adminCount">0</p></div>
+            <div class="stat-box"><h4>Recepcionistas</h4><p id="recepcionCount">0</p></div>
+            <div class="stat-box"><h4>Limpieza</h4><p id="limpiezaCount">0</p></div>
+            <div class="stat-box"><h4>Mantenimiento</h4><p id="mantenimientoCount">0</p></div>
+          </div>
+        </section>
+
+        <!-- Tabla de empleados -->
+        <section class="section-card">
+          <h3>Listado de Empleados</h3>
+          <div class="table-actions">
+            <input type="text" placeholder="Buscar por nombre o rol..." class="search-input" />
+            <button class="btn-export"><i class="fas fa-download"></i> Exportar</button>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cargo</th>
+                <th>Salario</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5">Cargando . . .</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/Controller/ControllerEmpleados.js"></script>
+  <script src="js/cerrar sesion.js"></script>
 </body>
-
 </html>

@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
   <div>
     <label><strong>Respuesta de seguridad</strong></label>
     <input id="u-sec" class="input" type="text" placeholder="Respuesta secreta"
-           value="${vals.segurityAnswerUsuario ?? ""}" style="${inputStyle}">
+           style="${inputStyle}">
   </div>
   ` : ""}
 
@@ -185,19 +185,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // validar duplicados
-    const emailExiste = DATA.some(u => u.correoUsuario === correo && u.idUsuario !== currentId);
+    const emailExiste = DATA.some(u => String(u.correoUsuario) === correo && String(u.idUsuario) !== String(currentId));
     if (emailExiste) {
       Swal.showValidationMessage("Ya existe un usuario con ese correo.");
       return false;
     }
 
-    const nombreExiste = DATA.some(u => u.nombreUsuario === nombre && u.idUsuario !== currentId);
+    const nombreExiste = DATA.some(u => String(u.nombreUsuario) === nombre && String(u.idUsuario) !== String(currentId));
     if (nombreExiste) {
       Swal.showValidationMessage("Ya existe un usuario con ese nombre.");
       return false;
     }
 
     const payload = {
+      idUsuario: currentId,       // ✅ agregado para update
       idRol: rol,
       nombreUsuario: nombre,
       correoUsuario: correo,
@@ -219,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
       }
 
+      // 👇 ojo, revisa que coincidan con el DTO en backend
       payload.contraseñaUsuario = pass;
       payload.segurityAnswerUsuario = sec;
     }
@@ -248,6 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function editDialog(current){
     const vals = {
+      idUsuario: current.idUsuario ?? "",
       idRol: current.idRol ?? "",
       nombreUsuario: current.nombreUsuario ?? "",
       correoUsuario: current.correoUsuario ?? "",
@@ -267,7 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
       didOpen: () => {
         const rolSel = document.getElementById("u-rol");
         const genSel = document.getElementById("u-genero");
-
         if (rolSel) rolSel.innerHTML = `<option value="">Seleccione...</option>${optionsRoles(vals.idRol)}`;
         if (genSel) genSel.value = vals.generoUsuario || "";
       }
@@ -297,6 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try{
       const payload = await createDialog();
       if (!payload) return;
+      console.log("Payload create:", payload); // debug
       await createUsuarios(payload);
       toast("success","Usuario creado");
       await loadUsuarios();
@@ -337,6 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const payload = await editDialog(current);
         if (!payload) return;
 
+        console.log("Payload update:", payload); // debug
         await updateUsuarios(id, payload);
         toast("success","Usuario actualizado");
         await loadUsuarios();
