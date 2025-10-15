@@ -37,13 +37,13 @@ document.addEventListener('DOMContentLoaded', async () =>{
             }
 
             // 3) Llama al servicio de login (envía credenciales, espera cookie de sesión)
-            await login({correoUsuario, contraseñaUsuario});
+            await login({ correoUsuario, contraseñaUsuario });
 
             // 4) Verifica sesión con /authMe para configurar que la cookie quedó activa
             const info = await me(); //El service incluye credentials: 'Include'
             if(info?.authenticated){
                 // 5) Redirección a la página principal si autenticado
-                window.location.href = "home.html";
+                window.location.href = "dashboard.html";
             }else{
                 //Entre líneas: si no se refleja autenticación, alerta de cookie/sesión
                 alertbox.textContent = 'Error de Cookie o de inicio de sesión';

@@ -43,7 +43,7 @@
       <div class="sidebar-footer">
         <button id="logoutButton" class="btn-logout">Cerrar Sesión</button>
         <div class="sidebar-user-profile">
-          <img src="assets/images/user-avatar.jpg" alt="User Avatar" class="sidebar-user-avatar"/>
+          <img src="img/user-avatar.webp" alt="User Avatar" class="sidebar-user-avatar"/>
           <div class="sidebar-user-details">
             <span class="sidebar-user-name">Adriana Montoya</span>
             <span class="sidebar-user-email">adriana@finder.com</span>
@@ -56,7 +56,7 @@
       <header class="top-header">
         <div class="company-name">Finder Hotel</div>
         <div class="user-profile-header">
-          <img src="assets/images/user-avatar.jpg" alt="User Avatar"/>
+          <img src="img/user-avatar.webp" alt="User Avatar"/>
           <span>Adriana Montoya</span>
         </div>
       </header>
@@ -81,11 +81,11 @@
               <p><span id="countOccupied">0</span></p>
             </div>
             <div class="status-box cleaning">
-              <h4>Limpieza</h4>
+              <h4>Reservadas</h4>
               <p><span id="countCleaning">0</span></p>
             </div>
             <div class="status-box maintenance">
-              <h4>Mantenimiento</h4>
+              <h4>En Mantenimiento</h4>
               <p><span id="countMaintenance">0</span></p>
             </div>
           </div>
@@ -101,8 +101,8 @@
               <option value="">Todas</option>
               <option value="disponible">Disponible</option>
               <option value="ocupada">Ocupada</option>
-              <option value="limpieza">Limpieza</option>
-              <option value="mantenimiento">Mantenimiento</option>
+              <option value="reservada">Reservadas</option>
+              <option value="En mantenimiento">En mantenimiento</option>
             </select>
             <button class="btn-export"><i class="fas fa-download"></i> Exportar</button>
           </div>
@@ -112,8 +112,9 @@
               <tr>
                 <th>Nº Habitación</th>
                 <th>Tipo</th>
-                <th>Capacidad</th>
                 <th>Precio/Noche</th>
+                <th>Estado</th>
+                <th>Imagen</th>
                 <th>Acciones</th>
               </tr>
             </thead>

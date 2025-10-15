@@ -11,7 +11,7 @@ function headersJSON() {
 }
 
 export async function getReservas() {
-  const res = await fetch(`${API_URL}/consultarReservas`, { headers: { Accept: "application/json" } });
+  const res = await fetch(`${API_URL}/consultarReservas`, { headers: { Accept: "application/json" }, credentials: "include" });
   const body = await readBodySafe(res);
   if (!res.ok) {
     console.error("[GET reservas] error:", body);
@@ -24,6 +24,7 @@ export async function createReservas(data) {
   const res = await fetch(`${API_URL}/registrarReservas`, {
     method: "POST",
     headers: headersJSON(),
+    credentials: "include",
     body: JSON.stringify(data)
   });
   const body = await readBodySafe(res);
@@ -38,6 +39,7 @@ export async function updateReservas(idReserva, data) {
   const res = await fetch(`${API_URL}/actualizarReservas/${idReserva}`, {
     method: "PUT",
     headers: headersJSON(),
+    credentials: "include",
     body: JSON.stringify(data)
   });
   const body = await readBodySafe(res);
@@ -50,8 +52,10 @@ export async function updateReservas(idReserva, data) {
 
 export async function deleteReservas(idReserva) {
   const res = await fetch(`${API_URL}/eliminarReservas/${idReserva}`, {
+    credentials: "include",
     method: "DELETE",
-    headers: { Accept: "application/json" }
+    headers: { Accept: "application/json" },
+    credentials: "include"
   });
   const body = await readBodySafe(res);
   if (!res.ok) {

@@ -29,10 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const estadoNombre = (val) => {
     const s = norm(val);
-    if (s.includes("disponible")) return "Disponible";
-    if (s.includes("ocupada")) return "Ocupada";
-    if (s.includes("limpieza")) return "Limpieza";
-    if (s.includes("mantenimiento")) return "Mantenimiento";
+    if (s.includes("Disponible")) return "Disponible";
+    if (s.includes("Ocupada")) return "Ocupada";
+    if (s.includes("Reservada")) return "Reservada";
+    if (s.includes("En mantenimiento")) return "En Mantenimiento";
     return val || "-";
   };
 
@@ -40,21 +40,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const t = estadoNombre(val);
     return t === "Disponible" ? "available" :
            t === "Ocupada" ? "occupied" :
-           t === "Limpieza" ? "cleaning" :
-           t === "Mantenimiento" ? "maintenance" :
+           t === "Reservada" ? "Reservada" :
+           t === "En Mantenimiento" ? "maintenance" :
            "other";
   };
 
   const renderRow = (h) => {
     const tr = document.createElement("tr");
     tr.dataset.idHabitacion = h.idHabitacion;
+    const imagen = h.imagenHabitacion && h.imagenHabitacion.trim() !== "" ? h.imagenHabitacion : "img/No disponible.png";
     tr.innerHTML = `
       <td>${h.numeroHabitacion}</td>
-      <td>${h.tipoHabitacion}</td>
+      <td>${h.nombreTipoHabitacion}</td>
       <td>${h.precioHabitacion}</td>
-      <td>${h.estadoHabitacion}</td>
-      <td><img src="${h.imagenHabitacion}" alt="Imagen" style="width: 50px; height: auto; border-radius: 6px;"></td>
-      <td><span class="status-badge ${estadoClase(h.estadoHabitacion)}">${estadoNombre(h.estadoHabitacion)}</span></td>
+      <td><span class="status-badge ${estadoClase(h.NombreEstadoHabitacion)}">${estadoNombre(h.nombreEstadoHabitacion)}</span></td>
+      <td><img src="${imagen}" alt="Imagen" style="width: 50px; height: auto; border-radius: 6px;"></td>
       <td>
         <button class="btn-action edit"><i class="fas fa-edit"></i></button>
         <button class="btn-action delete"><i class="fas fa-trash"></i></button>
@@ -75,11 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const contarEstados = (lista) => {
     let d = 0, o = 0, l = 0, m = 0;
     for (const h of lista) {
-      const e = estadoNombre(h.estadoHabitacion);
+      const e = estadoNombre(h.nombreEstadoHabitacion);
       if (e === "Disponible") d++;
       else if (e === "Ocupada") o++;
-      else if (e === "Limpieza") l++;
-      else if (e === "Mantenimiento") m++;
+      else if (e === "Reservada") l++;
+      else if (e === "En Mantenimiento") m++;
     }
     $countAvail.textContent = d;
     $countOcc.textContent = o;
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function modalHtml(vals = {}) {
     return `
       <div class="swal2-grid">
-        <input id="h-numero" class="swal2-input" placeholder="Número" value="${vals.numeroHabitacion ?? ""}">
+        <input id="h-numero" class="swal2-input" type="number" min="1" placeholder="Número" value="${vals.numeroHabitacion ?? ""}">
         <input id="h-tipo" class="swal2-input" placeholder="Tipo" value="${vals.tipoHabitacion ?? ""}">
         <input id="h-precio" class="swal2-input" type="number" placeholder="Precio" value="${vals.precioHabitacion ?? ""}">
         <input id="h-estado" class="swal2-input" placeholder="Estado" value="${vals.estadoHabitacion ?? ""}">

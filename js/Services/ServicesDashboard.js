@@ -3,7 +3,9 @@ const API_URL = "http://localhost:8080/api";
 // 🔹 Helper: siempre retorna array plano
 async function fetchArray(endpoint, errorMsg) {
   try {
-    const res = await fetch(`${API_URL}/${endpoint}`);
+    const res = await fetch(`${API_URL}/${endpoint}`, {
+      credentials: "include"
+    });
     if (!res.ok) throw new Error(errorMsg);
 
     const data = await res.json();

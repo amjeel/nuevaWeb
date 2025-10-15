@@ -1,14 +1,17 @@
-const API_AUTH ="http://localhost:8080/api"
+const API_AUTH ="http://localhost:8080/api";
 
 export async function login({ correoUsuario, contraseñaUsuario}) 
 {
-    const r = await fetch (`${API_AUTH}/authLogin`,{
+    const r = await fetch (`${API_AUTH}/authLogin`, {
         method: "POST",
-        Headers: { "Content-type": "application/json"},
+        headers: { "Content-Type": "application/json"},
         credentials: "include",
         body: JSON.stringify({ correoUsuario, contraseñaUsuario}),
     });
+
     if (!r.ok) throw new Error(await r.text().catch(() => ""));
+
+    return true;
 }
 
 // Verifica el estado de autenticación actual

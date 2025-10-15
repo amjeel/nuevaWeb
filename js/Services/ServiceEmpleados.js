@@ -4,7 +4,8 @@ const API_URL = "http://localhost:8080/api";
 // GET: Obtener empleados (paginado o lista completa)
 export async function getEmpleados() {
   const res = await fetch(`${API_URL}/consultarEmpleados`, {
-    headers: { Accept: "application/json" }
+    headers: { Accept: "application/json" },
+    credentials: "include"
   });
   if (!res.ok) throw new Error(`GET empleados → ${res.status} ${await res.text()}`);
   return res.json();
@@ -15,6 +16,7 @@ export async function createEmpleados(data) {
   const res = await fetch(`${API_URL}/registrarEmpleados`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
+    credentials: "include",
     body: JSON.stringify(data)
   });
   if (!res.ok) throw new Error(`POST empleados → ${res.status} ${await res.text()}`);
@@ -26,6 +28,7 @@ export async function updateEmpleados(idEmpleado, data) {
   const res = await fetch(`${API_URL}/actualizarEmpleados/${idEmpleado}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
+    credentials: "include",
     body: JSON.stringify(data)
   });
   if (!res.ok) throw new Error(`PUT empleados → ${res.status} ${await res.text()}`);
@@ -36,6 +39,7 @@ export async function updateEmpleados(idEmpleado, data) {
 export async function deleteEmpleados(idEmpleado) {
   const res = await fetch(`${API_URL}/eliminarEmpleados/${idEmpleado}`, {
     method: "DELETE",
+    credentials: "include",
     headers: { Accept: "application/json" }
   });
   if (!res.ok) throw new Error(`DELETE empleados → ${res.status} ${await res.text()}`);

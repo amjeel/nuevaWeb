@@ -18,8 +18,7 @@ async function loadHighlightCards() {
   console.log("Clientes:", clientes);
   console.log("CheckIns:", checkins);
   console.log("CheckOuts:", checkouts);
-
-  // --- Reservas ---
+    // --- Reservas ---
   document.getElementById("reservasActivas").textContent = reservas.length;
 
   // --- Habitaciones ---
