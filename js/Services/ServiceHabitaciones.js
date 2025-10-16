@@ -10,6 +10,20 @@ export async function getHabitaciones() {
   return res.json();
 }
 
+export async function consultarTiposHabitacion(){
+  const res = await fetch(`${API_URL}/consultarTiposHabitacion`, {
+    credentials: "include"
+  });
+  return res.json();
+}
+
+export async function consultarEstadosHabitacion(){
+  const res = await fetch(`${API_URL}/consultarEstadosHabitacion`, {
+    credentials: "include"
+  });
+  return res.json();
+}
+
 export async function createHabitaciones(data) {
   const res = await fetch(`${API_URL}/registrarHabitaciones`, {
     method: "POST",

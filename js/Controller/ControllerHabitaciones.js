@@ -2,7 +2,9 @@ import {
   getHabitaciones,
   createHabitaciones,
   updateHabitaciones,
-  deleteHabitaciones
+  deleteHabitaciones,
+  consultarEstadosHabitacion,
+  consultarTiposHabitacion,
 } from "../Services/ServiceHabitaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -15,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const $countOcc = document.getElementById("countOccupied");
   const $countClean = document.getElementById("countCleaning");
   const $countMaint = document.getElementById("countMaintenance");
+  const idEstadoHabitacion = document.getElementById("h-estado");
+  const idTipoHabitacion = document.getElementById("h-tipo");
 
   let DATA = [];
   let TIPOS = [];
@@ -23,10 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const API_URL = "http://localhost:8080/api";
   const ENDPOINT_TIPOS = `${API_URL}/consultarTiposHabitacion`;
   const ENDPOINT_ESTADOS = `${API_URL}/consultarEstadosHabitacion`;
-
-  // ✅ Config Cloudinary
-  const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dbubhdt8n/image/upload";
-  const CLOUDINARY_PRESET = "finderhotel_unsigned";
 
   const toast = (icon = "success", title = "") =>
     Swal.fire({
@@ -48,21 +48,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const estadoClase = (val) => {
     const t = estadoNombre(val);
     return t === "Disponible" ? "available" :
-           t === "Ocupada" ? "occupied" :
-           t === "Reservada" ? "cleaning" :
-           t === "En Mantenimiento" ? "maintenance" : "other";
+      t === "Ocupada" ? "occupied" :
+        t === "Reservada" ? "cleaning" :
+          t === "En Mantenimiento" ? "maintenance" : "other";
   };
 
   const renderRow = (h) => {
     const tr = document.createElement("tr");
     tr.dataset.idHabitacion = h.idHabitacion;
-    const imagen = h.imagenHabitacion && h.imagenHabitacion.trim() !== "" ? h.imagenHabitacion : "img/No disponible.png";
     tr.innerHTML = `
       <td>${h.numeroHabitacion}</td>
       <td>${h.nombreTipoHabitacion}</td>
       <td>${h.precioHabitacion}</td>
       <td><span class="status-badge ${estadoClase(h.nombreEstadoHabitacion)}">${estadoNombre(h.nombreEstadoHabitacion)}</span></td>
-      <td><img src="${imagen}" alt="Imagen" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;"></td>
       <td>
         <button class="btn-action edit"><i class="fas fa-edit"></i></button>
         <button class="btn-action delete"><i class="fas fa-trash"></i></button>
@@ -74,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const renderTabla = (lista) => {
     tbody.innerHTML = "";
     if (!lista.length) {
-      tbody.innerHTML = `<tr><td colspan="7">No hay habitaciones registradas.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6">No hay habitaciones registradas.</td></tr>`;
       return;
     }
     lista.forEach(h => tbody.appendChild(renderRow(h)));
@@ -114,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
   filterSelect?.addEventListener("change", applyFilters);
 
   async function loadHabitaciones() {
-    tbody.innerHTML = `<tr><td colspan="7">Cargando habitaciones...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6">Cargando habitaciones...</td></tr>`;
     try {
       const raw = await getHabitaciones();
       DATA = Array.isArray(raw) ? raw : raw.content || [];
@@ -123,22 +121,70 @@ document.addEventListener("DOMContentLoaded", () => {
       applyFilters();
     } catch (e) {
       console.error("Error al cargar habitaciones:", e);
-      tbody.innerHTML = `<tr><td colspan="7">Error al cargar datos.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6">Error al cargar datos.</td></tr>`;
       toast("error", "Error al cargar habitaciones");
     }
   }
 
-  // 🔹 Obtener tipos y estados desde API
+  async function CargarTiposHabitacion(selectItem) {
+    try {
+      const data = await consultarTiposHabitacion();
+      const TiposHabitacion = data.content;
+
+      selectItem.innerHTML = "";
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.disabled = true;
+      opt.selected = true;
+      opt.hidden = true;
+      opt.textContent = "Seleccione...";
+      selectItem.appendChild(opt);
+
+      TiposHabitacion.forEach((t) => {
+        const option = document.createElement("option");
+        option.value = t.idTipoHabitacion;
+        option.textContent = t.nombreTipoHabitacion;
+        selectItem.appendChild(option);
+      });
+    } catch (err) {
+      Swal.fire("Error", "Error al cargar los tipos de habitación: " + err, "error");
+    }
+  }
+
+  async function CargarEstadosHabitacion(selectItem) {
+    try {
+      const data = await consultarEstadosHabitacion();
+      const EstadosHabitacion = data.content;
+
+      selectItem.innerHTML = "";
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.disabled = true;
+      opt.selected = true;
+      opt.hidden = true;
+      opt.textContent = "Seleccione...";
+      selectItem.appendChild(opt);
+
+      EstadosHabitacion.forEach((e) => {
+        const option = document.createElement("option");
+        option.value = e.idEstadoHabitacion;
+        option.textContent = e.nombreEstadoHabitacion;
+        selectItem.appendChild(option);
+      });
+    } catch (err) {
+      Swal.fire("Error", "Error al cargar los estados de habitación: " + err, "error");
+    }
+  }
+
   async function getCatalogos() {
     const [resTipos, resEstados] = await Promise.all([
-      fetch(ENDPOINT_TIPOS).then(r => r.json()),
-      fetch(ENDPOINT_ESTADOS).then(r => r.json())
+      fetch(ENDPOINT_TIPOS, { credentials: "include" }).then(r => r.json()),
+      fetch(ENDPOINT_ESTADOS, { credentials: "include" }).then(r => r.json())
     ]);
     TIPOS = Array.isArray(resTipos) ? resTipos : resTipos.data || [];
     ESTADOS = Array.isArray(resEstados) ? resEstados : resEstados.data || [];
   }
 
-  // 💎 Modal bonito con Cloudinary + combos
   async function openModal(current = null) {
     await getCatalogos();
     const isEdit = !!current;
@@ -148,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ).join("");
 
     const estadoOptions = ESTADOS.map(
-      (e) => `<option value="${e.nombreEstadoHabitacion}" ${e.nombreEstadoHabitacion === current?.nombreEstadoHabitacion ? "selected" : ""}>${e.nombreEstadoHabitacion}</option>`
+      (e) => `<option value="${e.idEstadoHabitacion}" ${e.nombreEstadoHabitacion === current?.nombreEstadoHabitacion ? "selected" : ""}>${e.nombreEstadoHabitacion}</option>`
     ).join("");
 
     await Swal.fire({
@@ -165,8 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
           .swal2-modern input, .swal2-modern select {
             width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;
           }
-          .img-box { grid-column: span 2; text-align: center; margin-top: 8px; }
-          .img-box img { width: 90px; height: 90px; border-radius: 8px; object-fit: cover; margin-top: 6px; display: none; }
         </style>
 
         <div class="swal2-modern">
@@ -186,11 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
             <label>Estado</label>
             <select id="h-estado">${estadoOptions}</select>
           </div>
-          <div class="img-box">
-            <label>Imagen</label>
-            <input id="imagenFile" type="file" accept="image/*">
-            <img id="previewImg" src="${current?.imagenHabitacion ?? ""}" style="display:${current?.imagenHabitacion ? "block" : "none"}">
-          </div>
         </div>
       `,
       confirmButtonText: isEdit ? "Actualizar" : "Guardar",
@@ -199,55 +238,22 @@ document.addEventListener("DOMContentLoaded", () => {
       cancelButtonColor: "#6e7b85",
       focusConfirm: false,
       didOpen: () => {
-        const fileInput = document.getElementById("imagenFile");
-        const preview = document.getElementById("previewImg");
-        fileInput.addEventListener("change", () => {
-          const file = fileInput.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              preview.src = e.target.result;
-              preview.style.display = "block";
-            };
-            reader.readAsDataURL(file);
-          }
-        });
+        const idEstadoHabitacion = document.getElementById("h-estado");
+        CargarEstadosHabitacion(idEstadoHabitacion);
+
+        const idTipoHabitacion = document.getElementById("h-tipo");
+        CargarTiposHabitacion(idTipoHabitacion);
       },
-      preConfirm: async () => {
-        const fileInput = document.getElementById("imagenFile");
-        let imageUrl = current?.imagenHabitacion ?? "";
-
-        // Subir a Cloudinary si hay nueva imagen
-        if (fileInput.files.length > 0) {
-          const file = fileInput.files[0];
-          const formData = new FormData();
-          formData.append("file", file);
-          formData.append("upload_preset", CLOUDINARY_PRESET);
-
-          Swal.fire({
-            title: "Subiendo imagen...",
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading(),
-          });
-
-          const res = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
-          const data = await res.json();
-          Swal.close();
-          imageUrl = data.secure_url;
-        }
-
-        return {
-          numeroHabitacion: document.getElementById("h-numero").value.trim(),
-          nombreTipoHabitacion: document.getElementById("h-tipo").value,
-          precioHabitacion: document.getElementById("h-precio").value.trim(),
-          nombreEstadoHabitacion: document.getElementById("h-estado").value,
-          imagenHabitacion: imageUrl
-        };
-      }
+      preConfirm: () => ({
+        numeroHabitacion: document.getElementById("h-numero").value.trim(),
+        idTipoHabitacion: document.getElementById("h-tipo").value,
+        precioHabitacion: document.getElementById("h-precio").value.trim(),
+        idEstadoHabitacion: document.getElementById("h-estado").value,
+      })
     }).then(async (res) => {
       if (!res.isConfirmed) return;
       const data = res.value;
-      if (!data.numeroHabitacion || !data.nombreTipoHabitacion || !data.precioHabitacion)
+      if (!data.numeroHabitacion || !data.idTipoHabitacion || !data.precioHabitacion)
         return toast("error", "Completa todos los campos obligatorios");
 
       if (isEdit) {
@@ -261,7 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ---------- Eventos ---------- */
   btnNueva.addEventListener("click", () => openModal());
 
   tbody.addEventListener("click", async (e) => {
