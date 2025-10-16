@@ -47,117 +47,109 @@ const normalizeList = (raw) => {
   return [];
 };
 
+/* ------------------ Funciones para cargar combos ------------------ */
+const API_URL = "http://localhost:8080/api";
+const ENDPOINT_EMPLEADOS = `${API_URL}/consultarEmpleados`;
+const ENDPOINT_DETALLES  = `${API_URL}/consultarDetallesReserva`;
+
+async function fetchEmpleados(){
+  try{
+    const r = await fetch(ENDPOINT_EMPLEADOS);
+    const data = await r.json();
+    return Array.isArray(data) ? data : (data.content || []);
+  }catch{ return []; }
+}
+
+async function fetchDetalles(){
+  try{
+    const r = await fetch(ENDPOINT_DETALLES);
+    const data = await r.json();
+    return Array.isArray(data) ? data : (data.content || []);
+  }catch{ return []; }
+}
+
 /* ------------------ Modal único Check-in / Check-out ------------------ */
 async function openCheckDialog(initialTipo="checkin", preset={}){
   let tipo = initialTipo;
   let vals = { ...preset };
 
-  const bodyCheckIn  = (v={}) => `
-    <div><label>Fecha/Hora llegada</label>
-      <input id="op-fecha" class="input" type="datetime-local" value="${v.fechaHora ?? ""}">
-    </div>
-    <div><label>Documento verificado</label>
-      <select id="op-doc" class="select">
-        <option value="si" ${v.docOk==="si"?"selected":""}>Sí</option>
-        <option value="no" ${v.docOk==="no"?"selected":""}>No</option>
-      </select>
-    </div>`;
+  const empleados = await fetchEmpleados();
+  const detalles  = await fetchDetalles();
 
-  const bodyCheckOut = (v={}) => `
-    <div><label>Fecha/Hora salida</label>
-      <input id="op-fecha" class="input" type="datetime-local" value="${v.fechaHora ?? ""}">
-    </div>
-    <div><label>Cargos adicionales</label>
-      <input id="op-cargos" class="input" type="number" step="0.01" min="0" placeholder="0.00" value="${v.cargos ?? ""}">
-    </div>
-    <div><label>Método de pago</label>
-      <select id="op-pago" class="select">
-        <option value="efectivo" ${v.pago==="efectivo"?"selected":""}>Efectivo</option>
-        <option value="tarjeta"  ${v.pago==="tarjeta"?"selected":""}>Tarjeta</option>
-        <option value="transferencia" ${v.pago==="transferencia"?"selected":""}>Transferencia</option>
-      </select>
-    </div>`;
+  const comboEmpleados = (sel) =>
+    empleados.map(e => `<option value="${e.nombreEmpleado}" ${e.nombreEmpleado===sel?"selected":""}>${e.nombreEmpleado}</option>`).join("");
+
+  const comboDetalles = (sel) =>
+    detalles.map(d => `<option value="${d.idDetalle}" ${d.idDetalle===sel?"selected":""}>${d.idDetalle} - Habitación ${d.numeroHabitacion ?? ""}</option>`).join("");
 
   const tpl = (v={}) => `
     <div class="form-grid">
-      <div><label>Tipo</label>
+      <div>
+        <label>Tipo</label>
         <select id="op-tipo" class="select">
-          <option value="checkin"  ${tipo==="checkin"?"selected":""}>Check-in</option>
+          <option value="checkin" ${tipo==="checkin"?"selected":""}>Check-in</option>
           <option value="checkout" ${tipo==="checkout"?"selected":""}>Check-out</option>
         </select>
       </div>
-      <div><label>ID Reserva</label>
-        <input id="op-reserva" class="input" placeholder="ID de la reserva" value="${v.reservaId ?? ""}">
+      <div>
+        <label>Detalle de Reserva</label>
+        <select id="op-detalle" class="select">
+          <option value="">Seleccione...</option>
+          ${comboDetalles(v.idDetalle)}
+        </select>
       </div>
-      <div><label>Huésped</label>
-        <input id="op-huesped" class="input" placeholder="Nombre del huésped" value="${v.huesped ?? ""}">
+      <div>
+        <label>Empleado</label>
+        <select id="op-empleado" class="select">
+          <option value="">Seleccione...</option>
+          ${comboEmpleados(v.nombreEmpleado)}
+        </select>
       </div>
-      <div><label>Habitación</label>
-        <input id="op-hab" class="input" placeholder="Ej. 203" value="${v.habitacion ?? ""}">
+      <div>
+        <label>${tipo==="checkin" ? "Fecha y hora Check-in" : "Fecha y hora Check-out"}</label>
+        <input id="op-fecha" class="input" type="datetime-local" value="${v.fecha ?? ""}">
       </div>
-      ${tipo==="checkin" ? bodyCheckIn(v) : bodyCheckOut(v)}
-      <div style="grid-column:1/-1"><label>Notas (opcional)</label>
-        <textarea id="op-notas" class="textarea" rows="3" placeholder="Observaciones...">${v.notas ?? ""}</textarea>
+      <div style="grid-column:1/-1">
+        <label>Observación</label>
+        <textarea id="op-obs" class="textarea" rows="3" placeholder="Observaciones...">${v.observacion ?? ""}</textarea>
       </div>
     </div>`;
 
-  const keep = () => {
-    const g = id => document.getElementById(id)?.value ?? "";
-    return {
-      reservaId: g("op-reserva"),
-      huesped:   g("op-huesped"),
-      habitacion:g("op-hab"),
-      fechaHora: g("op-fecha"),
-      docOk:     document.getElementById("op-doc")?.value ?? "",
-      cargos:    g("op-cargos"),
-      pago:      document.getElementById("op-pago")?.value ?? "",
-      notas:     g("op-notas"),
-    };
-  };
+  const keep = () => ({
+    idDetalle:  document.getElementById("op-detalle")?.value ?? "",
+    nombreEmpleado: document.getElementById("op-empleado")?.value ?? "",
+    fecha:      document.getElementById("op-fecha")?.value ?? "",
+    observacion:document.getElementById("op-obs")?.value ?? ""
+  });
 
   const read = (t) => {
-    const g = id => document.getElementById(id)?.value?.trim() ?? "";
-    const reservaId = g("op-reserva");
-    const huesped   = g("op-huesped");
-    const habitacion= g("op-hab");
-    const fechaHora = g("op-fecha");
-    const notas     = g("op-notas");
+    const idDetalle  = document.getElementById("op-detalle")?.value;
+    const nombreEmpleado = document.getElementById("op-empleado")?.value;
+    const fecha      = document.getElementById("op-fecha")?.value;
+    const obs        = document.getElementById("op-obs")?.value;
 
-    if (!reservaId || !huesped || !habitacion || !fechaHora) {
-      Swal.showValidationMessage("Completa ID Reserva, Huésped, Habitación y Fecha/Hora.");
+    if (!idDetalle || !nombreEmpleado || !fecha) {
+      Swal.showValidationMessage("Completa todos los campos obligatorios.");
       return false;
     }
 
-    const payload = {
+    return {
       tipo: t,
-      idReserva: reservaId,
-      nombreHuesped: huesped,
-      numeroHabitacion: habitacion,
-      fechaHora,
-      notas: notas || null,
+      idDetalle,
+      nombreEmpleado,
+      ...(t==="checkin"
+        ? { fechaYHoraCheckIn: fecha, observacionCheckIn: obs || null }
+        : { fechaYHoraCheckOut: fecha, observacionCheckOut: obs || null })
     };
-
-    if (t==="checkin") {
-      payload.documentoVerificado = (document.getElementById("op-doc")?.value ?? "no") === "si";
-    } else {
-      const cargos = parseFloat(document.getElementById("op-cargos")?.value || "0");
-      if (Number.isNaN(cargos) || cargos < 0) {
-        Swal.showValidationMessage("Los cargos adicionales no son válidos.");
-        return false;
-      }
-      payload.cargosAdicionales = cargos;
-      payload.metodoPago = document.getElementById("op-pago")?.value || "efectivo";
-    }
-    return payload;
   };
 
   while (true) {
     let shouldRerender = false;
     const r = await Swal.fire({
-      title: "Registrar operación",
+      title: tipo==="checkin"?"Registrar Check-in":"Registrar Check-out",
       html: tpl(vals),
       width: 720,
-      customClass: { popup: "swal2-modern" },
+      customClass: { popup:"swal2-modern" },
       showCancelButton: true,
       focusConfirm: false,
       confirmButtonText: "Guardar",
@@ -173,9 +165,9 @@ async function openCheckDialog(initialTipo="checkin", preset={}){
       preConfirm: () => read(tipo),
     });
 
-    if (shouldRerender) continue;        // reabre con el otro tipo
-    if (!r.isConfirmed) return null;     // cancelado
-    return r.value;                      // confirmado
+    if (shouldRerender) continue;        
+    if (!r.isConfirmed) return null;     
+    return r.value;                      
   }
 }
 
@@ -190,26 +182,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const histCard = tbodyHist?.closest(".section-card");
   const searchInput  = histCard?.querySelector(".search-input");
-  const filterSelect = histCard?.querySelector(".filter-select"); // valores: "", "check-in", "check-out" en minúsculas
+  const filterSelect = histCard?.querySelector(".filter-select"); 
   const dateFilter   = histCard?.querySelector(".date-filter");
 
   // Estado local
   let IN = [], OUT = [], HIST = [];
 
-  // Normalizadores (map) flexibles
+  // Normalizadores
   const asCheckIn  = (r) => ({
-    id:      r.idCheckIn ?? r.id ?? r.checkinId ?? "",
-    reserva: r.idReserva ?? r.reservaId ?? r.reserva ?? "",
-    huesped: r.huesped ?? r.nombreHuesped ?? r.cliente ?? "-",
-    hab:     r.habitacion ?? r.numeroHabitacion ?? r.hab ?? "-",
-    hora:    r.horaPrevista ?? r.fechaHora ?? r.hora ?? "-",
+    id:      r.idCheckIn ?? r.id ?? "",
+    detalle: r.idDetalle ?? "-",
+    empleado:r.nombreEmpleado ?? "-",
+    fecha:   r.fechaYHoraCheckIn ?? "-",
+    obs:     r.observacionCheckIn ?? "-"
   });
   const asCheckOut = (r) => ({
-    id:      r.idCheckOut ?? r.id ?? r.checkoutId ?? "",
-    reserva: r.idReserva ?? r.reservaId ?? r.reserva ?? "",
-    huesped: r.huesped ?? r.nombreHuesped ?? r.cliente ?? "-",
-    hab:     r.habitacion ?? r.numeroHabitacion ?? r.hab ?? "-",
-    hora:    r.horaPrevista ?? r.fechaHora ?? r.hora ?? "-",
+    id:      r.idCheckOut ?? r.id ?? "",
+    detalle: r.idDetalle ?? "-",
+    empleado:r.nombreEmpleado ?? "-",
+    fecha:   r.fechaYHoraCheckOut ?? "-",
+    obs:     r.observacionCheckOut ?? "-"
   });
 
   /* ------------------------------- Render ------------------------------- */
@@ -217,20 +209,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     tbody.innerHTML = data.length
       ? data.map(x => `
         <tr data-id="${x.id}">
-          <td>${x.reserva}</td>
-          <td>${x.huesped}</td>
-          <td>${x.hab}</td>
-          <td>${x.hora}</td>
+          <td>${x.detalle}</td>
+          <td>${x.empleado}</td>
+          <td>${x.fecha}</td>
+          <td>${x.obs}</td>
           <td class="actions">
-            <button class="btn-action btn-view" title="Ver"><i class="fas fa-eye"></i></button>
             <button class="btn-action edit"     title="Editar"><i class="fas fa-edit"></i></button>
             <button class="btn-action delete"   title="Eliminar"><i class="fas fa-trash"></i></button>
-            <button class="btn-action primary do" title="${isIn?'Hacer check-in':'Hacer check-out'}">
-              <i class="fas fa-check"></i>
-            </button>
           </td>
         </tr>`).join("")
-      : `<tr><td colspan="5">Sin pendientes</td></tr>`;
+      : `<tr><td colspan="5">Sin registros</td></tr>`;
   };
 
   const renderHist = (data) => {
@@ -238,11 +226,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     tbodyHist.innerHTML = data.length
       ? data.map(h => `
         <tr>
-          <td>${h.huesped}</td>
-          <td>${h.hab}</td>
+          <td>${h.detalle}</td>
+          <td>${h.empleado}</td>
           <td>${h.tipo}</td>
           <td>${h.fecha}</td>
-          <td>${h.asist}</td>
+          <td>${h.obs}</td>
         </tr>`).join("")
       : `<tr><td colspan="5">Sin movimientos</td></tr>`;
   };
@@ -275,30 +263,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
   async function loadHist(){
-    // Si tu backend tiene historial real, reemplaza esta construcción local
-    const h1 = IN.map(x => ({ tipo:"check-in",  huesped:x.huesped, hab:x.hab, fecha:x.hora, asist:"-" }));
-    const h2 = OUT.map(x => ({ tipo:"check-out", huesped:x.huesped, hab:x.hab, fecha:x.hora, asist:"-" }));
+    const h1 = IN.map(x => ({ tipo:"check-in",  ...x }));
+    const h2 = OUT.map(x => ({ tipo:"check-out", ...x }));
     HIST = [...h1, ...h2].sort((a,b)=> String(b.fecha||"").localeCompare(String(a.fecha||"")));
     renderHist(HIST);
   }
-
-  /* ---------------------------- Filtros Hist ---------------------------- */
-  function applyHistFilters(){
-    const q = norm(searchInput?.value || "");
-    const t = (filterSelect?.value || "");      // "" | "check-in" | "check-out"
-    const d = (dateFilter?.value || "");        // YYYY-MM-DD
-
-    const filtered = HIST.filter(h=>{
-      const okQ = !q || norm(h.huesped).includes(q) || norm(h.hab).includes(q);
-      const okT = !t || (h.tipo.toLowerCase() === t);
-      const okD = !d || (h.fecha && String(h.fecha).slice(0,10) === d);
-      return okQ && okT && okD;
-    });
-    renderHist(filtered);
-  }
-  searchInput?.addEventListener("input", applyHistFilters);
-  filterSelect?.addEventListener("change", applyHistFilters);
-  dateFilter?.addEventListener("change", applyHistFilters);
 
   /* -------------------------- Acciones por fila -------------------------- */
   function attachRowActions(tbody, isIn){
@@ -308,24 +277,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       const tr = btn.closest("tr"); const id = tr?.dataset.id; if (!id) return;
       const list = isIn ? IN : OUT;
 
-      if (btn.classList.contains("btn-view")){
-        const [reserva,huesped,hab,hora] = Array.from(tr.querySelectorAll("td")).map(td=>td.textContent);
-        await Swal.fire({
-          title: isIn ? "Pendiente Check-in" : "Pendiente Check-out",
-          html: `<div style="text-align:left">
-                   <p><b>Reserva:</b> ${reserva}</p>
-                   <p><b>Huésped:</b> ${huesped}</p>
-                   <p><b>Habitación:</b> ${hab}</p>
-                   <p><b>Hora prevista:</b> ${hora}</p>
-                 </div>`,
-          icon:"info"
-        });
-        return;
-      }
-
       if (btn.classList.contains("edit")){
         const current = list.find(x => String(x.id) === String(id)); if (!current) return;
-        const preset = { reservaId: current.reserva, huesped: current.huesped, habitacion: current.hab, fechaHora: current.hora };
+        const preset = {
+          idDetalle: current.detalle,
+          nombreEmpleado: current.empleado,
+          fecha: current.fecha,
+          observacion: current.obs
+        };
         const payload = await openCheckDialog(isIn ? "checkin" : "checkout", preset);
         if (!payload) return;
         try {
@@ -349,15 +308,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           else     { await deleteCheckOut(id); await loadOut(); }
           await loadHist(); toast("success","Eliminado");
         }catch(err){ console.error(err); toast("error","No se pudo eliminar"); }
-        return;
-      }
-
-      if (btn.classList.contains("do")){
-        try {
-          if (isIn){ await updateCheckIn(id, { accion:"confirmar" });  await loadIn(); }
-          else     { await updateCheckOut(id, { accion:"confirmar" }); await loadOut(); }
-          await loadHist(); toast("success", isIn ? "Check-in realizado" : "Check-out realizado");
-        }catch(err){ console.error(err); toast("error","Operación no realizada"); }
       }
     });
   }
@@ -366,7 +316,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const btnAbrir = document.getElementById("ModalOn") || document.querySelector(".back-button");
   btnAbrir?.addEventListener("click", async (e)=>{
     e.preventDefault();
-    const payload = await openCheckDialog("checkin"); // el usuario puede cambiar a "Check-out"
+    const payload = await openCheckDialog("checkin");
     if (!payload) return;
     try{
       if (payload.tipo === "checkin") {

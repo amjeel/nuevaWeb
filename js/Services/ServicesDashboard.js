@@ -1,6 +1,6 @@
 const API_URL = "http://localhost:8080/api";
 
-// 🔹 Helper: siempre retorna array plano
+//  Helper: siempre retorna array plano
 async function fetchArray(endpoint, errorMsg) {
   try {
     const res = await fetch(`${API_URL}/${endpoint}`, {
@@ -39,6 +39,10 @@ export function getHabitaciones() {
 
 export function getClientes() {
   return fetchArray("consultarClientes", "Error al consultar clientes");
+}
+
+export function getUsuarios() {
+  return fetchArray("consultarUsuarios", "Error al consultar usuarios");
 }
 
 export function getCheckIn() {

@@ -367,37 +367,22 @@ body {
 /* Botón SUBMIT */
 
 .btn-primary {
-
-    width: 100%;
-
-    padding: 15px;
-
+    display: block;              /* Ocupa todo el ancho del contenedor */
+    width: 100%;                 /* 100% del ancho disponible */
+    padding: 18px;               /* Aumentamos el padding para mejor presencia */
     border: none;
-
-    border-radius: 8px;
-
-    background-color: #74a9a4; /* Color Primario */
-
-    color: white;
-
-    font-size: 1.2em;
-
+    border-radius: 10px;
+    background-color: #74a9a4;   /* Color principal */
+    color: #fff;
+    font-size: 1.3em;
     font-weight: bold;
-
     cursor: pointer;
-
-    transition: background-color 0.3s;
-
-    /* Estilo hover con color derivado más oscuro */
-
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-
-
 .btn-primary:hover {
-
-    background-color: #598581;
-
+    background-color: #598581;   /* Más oscuro al pasar el mouse */
+    transform: scale(1.02);      /* Pequeña animación */
 }
 
 
