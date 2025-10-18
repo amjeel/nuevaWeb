@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         signupMessage.textContent = '¡Cuenta creada exitosamente! Redireccionando al inicio de sesión...';
         signupMessage.style.color = 'green';
         setTimeout(() => {
-            window.location.href = 'index.html'; // Redirige al login después de crear la cuenta.
+            window.location.href = 'login.html'; // Redirige al login después de crear la cuenta.
         }, 2000);
 
         // Limpiar campos del formulario

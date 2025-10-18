@@ -71,7 +71,9 @@ const statusBadge = (estadoTxt) => {
   // ------- Catálogos -------
   async function loadEstados(){
     try{
-      const res = await fetch(ENDPOINT_ESTADOS);
+      const res = await fetch(ENDPOINT_ESTADOS, {
+        credentials: "include"
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const raw = await res.json();
       ESTADOS = normalizeList(raw);
@@ -83,7 +85,9 @@ const statusBadge = (estadoTxt) => {
 
   async function loadClientes() {
     try{
-      const res = await fetch (ENDPOINT_CLIENTES);
+      const res = await fetch (ENDPOINT_CLIENTES, {
+        credentials: "include"
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const raw = await res.json();
       CLIENTES = normalizeList(raw);
@@ -95,7 +99,9 @@ const statusBadge = (estadoTxt) => {
 
   async function loadPagos() {
     try{
-      const res = await fetch (ENDPOINT_METODOPAGO);
+      const res = await fetch (ENDPOINT_METODOPAGO, {
+        credentials: "include"
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const raw = await res.json();
       PAGOS = normalizeList(raw);
